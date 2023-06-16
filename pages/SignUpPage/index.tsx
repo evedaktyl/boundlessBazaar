@@ -73,7 +73,7 @@ function SignUpPage() {
         .then((user) => {
             if (user != null) {
                 changeLowerText(
-                    "Sign up for " + uname + " succcesful. Sign in to continue!"
+                    "Sign up for " + uname + " successful. Sign in to continue!"
                 );
             }
         })

@@ -8,9 +8,6 @@ import React from 'react';
 
 function SignInPage() {
 
-    const [id, changeId] = useState('0');
-    const [name, changeName] = useState('');
-    const [uname, changeUname] = useState('');
     const [pass, changePass] = useState('');
     const [email, changeEmail] = useState('');
     const [lowerText, changeLowerText] = useState('');
@@ -45,6 +42,7 @@ function SignInPage() {
                     );
             }
             const realPass = user.password_hash;
+            const name = user.name;
             if (pass !== realPass) {
                 changeLowerText(
                     "Oops... You've entered the wrong password. Please try again!"
@@ -57,6 +55,7 @@ function SignInPage() {
             .catch((error) => {
             console.error("Error fetching data", error);
             });
+
         }
 
             // for (let user of users) {
