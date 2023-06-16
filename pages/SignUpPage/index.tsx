@@ -2,13 +2,11 @@
 
 import 'tailwindcss/tailwind.css';
 import { useState } from 'react';
-// import { checkSignIn, createUser } from '../../components/UserService'
 import Link from 'next/link';
 
 
 function SignUpPage() {
 
-    const [id, changeId] = useState('0');
     const [name, changeName] = useState('');
     const [uname, changeUname] = useState('');
     const [pass, changePass] = useState('');
@@ -28,49 +26,67 @@ function SignUpPage() {
         changePass(event.currentTarget.value);
     }
 
-    const handleSubmit = (event: any) => {
-        testApiCall();
-
-        // checkSignIn(email, pass).then(users => {
-
-        //     if (users.length != 0) {
-        //         changeLowerText(
-        //             "Oops... Seems like you already have an account. Sign in here!"
-        //             );
-        //     } else {
-        //         createUser(id, email, uname, pass, name);
-        //         changeLowerText(
-        //             "Sign Up successful! Welcome to Boundless Bazaar " + name + "!"
-        //             );
-        //     }
-        // })
-
-
-        // getAllUsers().then(users => {
-
-        //     for (let user of users) {
-        //         console.log(user.username);
-        //         changeLowerText("Success: " + user.username);
-        //     }
-        // });
-        // createUser(id, email, uname, pass, name).then(response => {
-        //     changeId(id + 1);
-        //     console.log(response);
-        // })
+    const data_1 = {
+        user_email: email
     }
 
-    const testApiCall = async () => {
-        const response = await fetch("/api/pscale");
-        const data = await response.json();
-        console.log(data);
-        changeLowerText(data);
-        };
+    const data_2 = {
+        user_email: email,
+        name: name,
+        user: uname,
+        pass: pass
+    }
+
+    const handleSubmit = (event: any) => {
+        event.preventDefault();
+        fetch("/api/checkSignIn", {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data_1),
+        })
+        .then((response) => response.json())
+        .then((user) => {
+            if (user == null) {
+                createUser();
+            } else {
+                changeLowerText(
+                    "Account already exists. Please sign in to continue!"
+                    );
+            }
+        })
+        .catch((error) => {
+        console.error("Error fetching data", error);
+        });
+    }
+
+    const createUser = () => {
+        fetch("/api/createUser", {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data_2),
+        })
+        .then((response) => response.json())
+        .then((user) => {
+            if (user != null) {
+                changeLowerText(
+                    "Sign up for " + uname + " succcesful. Sign in to continue!"
+                );
+            }
+        })
+        .catch((error) => {
+            console.error("Error fetching data", error);
+            });
+    }
 
     return (
         <div className ="w-full h-screen py-12">
             <h1 className='mt-2 text-blue-800 text-6xl leading-8 font-bold pb-20 text-left pl-52'>
                 Sign up today and join the community.
-            </h1>   
+            </h1>
             <div className='text-left pl-52'>
                 <form className='pb-3'>
                     <label className='mt-2 text-blue-800 text-2xl leading-8 font-semibold sm:text-1xl pb-2 pr-14'>
