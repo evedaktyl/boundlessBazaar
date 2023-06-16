@@ -2,6 +2,7 @@
 
 import { Popover } from '@headlessui/react';
 import Image from 'next/image';
+import Link from 'next/link';
 
 
 function NavBar() {
@@ -10,16 +11,16 @@ function NavBar() {
     <header>
     <nav className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8" aria-label="Global">
       <div className="flex lg:flex-1">
-          <a href='/'>
+          <Link href='/'>
             <Image src="/BB_icon.png" alt="" width={50} height={50} />
-          </a>
+          </Link>
       </div>
       <Popover.Group className="hidden lg:flex lg:gap-x-20">
         <Popover>
-          <a href="/MarketplacePage" className="text-sm font-semibold leading-6 text-gray-900 hover:text-blue-700">
+          <Link href="/MarketplacePage" className="text-sm font-semibold leading-6 text-gray-900 hover:text-blue-700">
             Marketplace
             {/* <ChevronDownIcon className="h-5 w-5 flex-none text-gray-400" aria-hidden="true" /> */}
-          </a>
+          </Link>
 
           {/* <Transition
             as={Fragment}
@@ -66,21 +67,21 @@ function NavBar() {
           </Transition> */}
         </Popover>
 
-        <a href="/ProductRequestPage" className="text-sm font-semibold leading-6 text-gray-900 hover:text-blue-700">
+        <Link href="/ProductRequestPage" className="text-sm font-semibold leading-6 text-gray-900 hover:text-blue-700">
           List a Product
-        </a>
-        <a href="#" className="text-sm font-semibold leading-6 text-gray-900 hover:text-blue-700">
+        </Link>
+        <Link href="#" className="text-sm font-semibold leading-6 text-gray-900 hover:text-blue-700">
           Hot Buys
-        </a>
-        <a href="#" className="text-sm font-semibold leading-6 text-gray-900 hover:text-blue-700">
+        </Link>
+        <Link href="#" className="text-sm font-semibold leading-6 text-gray-900 hover:text-blue-700">
           About
-        </a>
+        </Link>
       </Popover.Group>
       
       <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-        <a href="/SignInPage" className="text-sm font-semibold leading-6 text-gray-900 hover:text-blue-700">
+        <Link href="/SignInPage" className="text-sm font-semibold leading-6 text-gray-900 hover:text-blue-700">
           Sign In / Sign Up <span aria-hidden="true">&rarr;</span>
-        </a>
+        </Link>
       </div>
     </nav>
   </header>
