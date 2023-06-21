@@ -14,4 +14,45 @@ model users {
   username      String @db.VarChar(255) 
   password_hash String @db.VarChar(255)
   name          String @db.VarChar(255)
+  buyer         buyers?
+  traveler     travelers?
 }
+
+model buyers {
+  country      String @db.VarChar(255)
+  state        String @db.VarChar(255)
+  city         String @db.VarChar(255)
+  user         users @relation(fields: [buyerId], references: [id])
+  buyerId      Int    @unique
+  products     products[]
+}
+
+model travelers {
+  country      String @db.VarChar(255)
+  state        String @db.VarChar(255)
+  city         String @db.VarChar(255)
+  user         users @relation(fields: [travellerId], references: [id])
+  travellerId  Int    @unique
+  products     products[] 
+}
+
+model products {
+  id            Int    @id @default(autoincrement())
+  url           String @db.VarChar(255)
+  created_at    DateTime @default(now())
+  title         String
+  details       String
+  country       String @db.VarChar(255)
+  state         String @db.VarChar(255)
+  city          String @db.VarChar(255) 
+  requested_by  buyers  @relation(fields: [buyer_id], references: [buyerId])
+  buyer_id      Int
+  accepted_by  travelers @relation(fields: [traveller_id], references: [travellerId])
+  traveller_id  Int
+  status        String @db.VarChar(255)
+
+  @@index([buyer_id])
+  @@index([traveller_id])
+}
+
+
