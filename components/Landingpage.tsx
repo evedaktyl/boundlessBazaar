@@ -2,6 +2,7 @@
 import 'tailwindcss/tailwind.css';
 import Image from 'next/image';
 import { Container, Col, Row } from 'react-bootstrap';
+import { signIn } from 'next-auth/react';
 
 export default function LandingPage() {
     return (

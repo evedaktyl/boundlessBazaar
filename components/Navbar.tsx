@@ -3,10 +3,24 @@
 import { Popover } from '@headlessui/react';
 import Image from 'next/image';
 import Link from 'next/link';
-
+import { useSession } from 'next-auth/react';
+import { useState } from 'react';
+import { signOut } from 'next-auth/react';
 
 function NavBar() {
+  const session = useSession();
+  let lowerText =
+    <Link href="/auth/signIn" className="text-sm font-semibold leading-6 text-gray-900 hover:text-blue-700">
+    Sign In / Sign Up <span aria-hidden="true">&rarr;</span>
+    </Link>;
 
+  if (session.status === "authenticated") {
+    lowerText =
+    <Link href="/auth/signOut"
+    className="text-sm font-semibold leading-6 text-gray-900 hover:text-blue-700">
+    {session.data.user?.name} | Sign Out<span aria-hidden="true">&rarr;</span>
+    </Link>;
+  }
   return (
     <header>
     <nav className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8" aria-label="Global">
@@ -79,9 +93,7 @@ function NavBar() {
       </Popover.Group>
       
       <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-        <Link href="/SignInPage" className="text-sm font-semibold leading-6 text-gray-900 hover:text-blue-700">
-          Sign In / Sign Up <span aria-hidden="true">&rarr;</span>
-        </Link>
+      {lowerText}
       </div>
     </nav>
   </header>
