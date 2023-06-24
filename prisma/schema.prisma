@@ -47,8 +47,8 @@ model products {
   city          String @db.VarChar(255) 
   requested_by  buyers  @relation(fields: [buyer_id], references: [buyerId])
   buyer_id      Int
-  accepted_by  travelers @relation(fields: [traveller_id], references: [travellerId])
-  traveller_id  Int
+  accepted_by  travelers? @relation(fields: [traveller_id], references: [travellerId])
+  traveller_id  Int?
   status        String @db.VarChar(255)
 
   @@index([buyer_id])

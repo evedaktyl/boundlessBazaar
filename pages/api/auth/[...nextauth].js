@@ -1,7 +1,5 @@
 import NextAuth from "next-auth"
-import GithubProvider from "next-auth/providers/github"
 import CredentialsProvider from "next-auth/providers/credentials"
-import { Prisma } from "@prisma/client";
 import prisma from "db";
 
 export const authOptions = {
@@ -29,6 +27,7 @@ export const authOptions = {
     
           if (dbUser && dbUser.password_hash == pass) {
             // Any object returned will be saved in `user` property of the JWT
+            console.log(dbUser);
             return dbUser;
           } else {
             // If you return null then an error will be displayed advising the user to check their details.
@@ -47,6 +46,28 @@ export const authOptions = {
   session: {
     strategy:"jwt"
   },
+  // callbacks: {
+  //   async session({ session, token }) {
+  //     // Send properties to the client, like an access_token and user id from a provider.
+  //     session.user = token.user
+  //     return session
+  //   },
+  //   // async jwt({ token, user }) {
+  //   //   // Persist the OAuth access_token and or the user id to the token right after signin
+  //   //   user && (token.user = user)
+  //   //   return token
+  //   // }
+  // },
+  callbacks: {
+    jwt: async ({ token, user }) => {
+        user && (token.user = user)
+        return token
+    },
+    session: async ({ session, token }) => {
+        session.user = token.user
+        return session
+    }
+},
   pages: {
     signIn: "/auth/signIn",
     signOut:"/auth/SignOut"
