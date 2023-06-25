@@ -4,7 +4,7 @@ import React from "react";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import {Row, Col } from "react-bootstrap"
-import Listings from "@/components/listings";
+import Listings from "@/components/Listings";
 import prisma from "@/lib/prisma";
 
 /*export default function Marketplace() {
@@ -136,7 +136,7 @@ export default function Marketplace() {
 
   const fetchProducts = async () => {
     try {
-      const response = await fetch('/api/products');
+      const response = await fetch('/api/getProducts');
       const data = await response.json();
       setProducts(data);
       setFilteredProducts(data);
