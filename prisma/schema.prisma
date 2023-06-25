@@ -23,7 +23,7 @@ model buyers {
   state        String @db.VarChar(255)
   city         String @db.VarChar(255)
   user         users @relation(fields: [buyerId], references: [id])
-  buyerId      Int   @unique
+  buyerId      Int @unique
   products     products[]
 }
 
@@ -32,7 +32,7 @@ model travelers {
   state        String @db.VarChar(255)
   city         String @db.VarChar(255)
   user         users @relation(fields: [travellerId], references: [id])
-  travellerId  Int    @unique
+  travellerId  Int  @unique
   products     products[] 
 }
 
@@ -55,7 +55,7 @@ model products {
   status        String @db.VarChar(255)
   curr_offer    Int
   quantity      Int
-  image_url     String @db.VarChar(255)
+  image_url     String? @db.VarChar(255)
 
   @@index([buyer_id])
   @@index([traveller_id])

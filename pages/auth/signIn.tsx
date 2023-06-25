@@ -54,13 +54,13 @@ function SignInPage() {
                     <label className='mt-2 text-blue-800 text-2xl leading-8 font-semibold sm:text-1xl pb-2 pr-16'>
                         Email:
                     </label>
-                    <input type="email" onChange={handleEmailChange} value={email} className='rounded text-1xl py-1 px-1'  />
+                    <input type="email" onChange={handleEmailChange} value={email} className='rounded text-black text-1xl py-1 px-1'  />
                 </form>
                 <form className='pb-6'>
                     <label className='mt-2 text-blue-800 text-2xl leading-8 font-semibold sm:text-1xl pb-5 pr-4'>
                         Password:
                     </label>
-                    <input type="password" onChange={handlePassChange} value={pass} className='rounded text-1xl py-1 px-1'  />
+                    <input type="password" onChange={handlePassChange} value={pass} className='rounded text-black text-1xl py-1 px-1'  />
                 </form>
                 <button type="submit" onClick={handleSubmit}
                     className='bg-green-700 hover:bg-green-900 text-white font-bold py-2 px-4 rounded'>
