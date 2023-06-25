@@ -4,7 +4,6 @@ import React from "react";
 import Image from "next/image";
 import { useState } from "react";
 import {Row, Col } from "react-bootstrap"
-import Listings from "@/components/listings";
 import prisma from "@/lib/prisma";
 
 export default function Marketplace() {
