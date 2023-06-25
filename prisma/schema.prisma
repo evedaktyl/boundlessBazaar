@@ -42,9 +42,12 @@ model products {
   created_at    DateTime @default(now())
   title         String
   details       String
-  country       String @db.VarChar(255)
-  state         String @db.VarChar(255)
-  city          String @db.VarChar(255) 
+  collect_country       String @db.VarChar(255)
+  collect_state         String @db.VarChar(255)
+  collect_city          String @db.VarChar(255) 
+  deliver_country       String @db.VarChar(255)
+  deliver_state         String @db.VarChar(255)
+  deliver_city          String @db.VarChar(255) 
   requested_by  buyers  @relation(fields: [buyer_id], references: [buyerId])
   buyer_id      Int
   accepted_by  travelers? @relation(fields: [traveller_id], references: [travellerId])

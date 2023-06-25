@@ -7,11 +7,12 @@ import { signIn } from 'next-auth/react';
 import { useSession } from 'next-auth/react';
 
 function SignInPage() {
-    const session = useSession();
+    const session:any = useSession();
 
     const [pass, changePass] = useState('');
     const [email, changeEmail] = useState('');
     const [lowerText, changeLowerText] = useState('');
+    const [name, changeName] = useState<string>('');
 
     const handleEmailChange = (event: any) => {
         changeEmail(event.currentTarget.value);
@@ -30,9 +31,12 @@ function SignInPage() {
         })
 
         if (res?.status == 200) {
-            const name = session.data?.user?.name;
-            console.log(name);
-            changeLowerText('Sucessful Sign In! Welcome back ' + name + '!')
+            const fetchName = session.data?.user?.name;
+            changeName(fetchName);
+            setTimeout(() => changeLowerText('Sucessful Sign In! Welcome back ' + name + '!'), 1000)
+            console.log(name);  
+        } else {
+            changeLowerText('Incorrect email or password. Please try again!')
         }
         console.log(res);  
     }

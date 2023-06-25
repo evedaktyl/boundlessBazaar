@@ -10,7 +10,8 @@ function SignOutPage() {
 
     const handleYes = async (event: any) => {
         router.push('/');
-        signOut();
+        const out = () => signOut();
+        out();
     }
 
     const handleNo = async (event: any) => {
