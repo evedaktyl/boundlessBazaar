@@ -8,5 +8,4 @@ export default async function handler(
     const products = await prisma.products.findMany({
     })
     res.status(200).json(products);
-    
 }

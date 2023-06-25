@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import Image from "next/image";
 import { useState } from "react";
 import {Row, Col } from "react-bootstrap"
@@ -10,17 +10,20 @@ export default function Marketplace() {
     }
     const [products, changeProducts] = useState<any>([]);
     const callProducts = async () => {
-        const response = await fetch('/api/getProducts', {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
+        try {
+            const response = await fetch('/api/getProducts', {
+                method: 'GET',
+                headers: {
+                'Content-Type': 'application/json',
+                }
+            });
+            if (response.ok) {
+                changeProducts(await response.json());
+            } else {
+                const data:any = await response.json();
+                console.error(data.message);
             }
-          });
-        if (response.ok) {
-            changeProducts(await response.json());
-        } else {
-            const data = await response.json();
-            console.error(data.message);
+        } catch(error) {
         }
         
     }
