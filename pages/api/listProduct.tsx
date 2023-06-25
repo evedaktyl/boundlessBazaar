@@ -6,42 +6,58 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(405).json({ message: 'Method Not Allowed' });
     }
   
-    const { userID, productURL, productName, yourOffer, deliveryCountry, deliveryState, deliveryCity } = req.body;
+    const { userID, deliveryCountry, deliveryState, deliveryCity,
+        productURL, productName, productCountry, productState, productCity,
+        imageURL, quantity, yourOffer, productDetails } = req.body;
   
     try {
       // Create the buyer entry
-      const buyer = await prisma.buyers.create({
-        data: {
-          country: deliveryCountry,
-          state: deliveryState,
-          city: deliveryCity,
-          buyerId: userID
-        },
+
+      const user = await prisma.buyers.findFirst({
+        where: {buyerId: userID}
       });
+
+      if (!user) {
+        await prisma.buyers.create({
+            data: {
+              country: deliveryCountry,
+              state: deliveryState,
+              city: deliveryCity,
+              buyerId: userID
+            },
+          });
+      }
   
       // Create the product entry and associate it with the buyer
       const product = await prisma.products.create({
         data: {
-          url: productURL,
+          web_url: productURL,
           title: productName,
-          details: yourOffer,
-          country: deliveryCountry,
-          state: deliveryState,
-          city: deliveryCity,
-          buyer_id: buyer.buyerId,
-          status: "Listed"
+          details: productDetails,
+          country: productCountry,
+          state: productState,
+          city: productCity,
+          buyer_id: userID,
+          status: "Listed",
+          quantity: +quantity,
+          curr_offer: +yourOffer,
+          image_url: imageURL
         },
       });
   
       // Update the buyers table to include the new product in the products array
       await prisma.buyers.update({
         where: {
-          buyerId: buyer.buyerId,
+          buyerId: userID,
         },
         data: {
-          products: {
+            country: deliveryCountry,
+            state: deliveryState,
+            city: deliveryCity,
+            buyerId: userID,
+            products: {
             connect: {
-              id: product.id,
+                id: product.id,
             },
           },
         },

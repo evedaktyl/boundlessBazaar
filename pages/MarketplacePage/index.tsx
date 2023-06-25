@@ -4,20 +4,32 @@ import React from "react";
 import Image from "next/image";
 import { useState } from "react";
 import {Row, Col } from "react-bootstrap"
+import Listings from "@/components/listings";
+import prisma from "@/lib/prisma";
 
-function Marketplace() {
+export default function Marketplace() {
     const [searchedProductName, changeSearchedProductName] = useState('');
     const productNameHandler = (e: any) => {
         changeSearchedProductName(e.currentTarget.value);
     }
-
+    const [products, changeProducts] = useState<any>([]);
+    const callProducts = async () => {
+        const response = await fetch('/api/getProducts', {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            }
+          });
+        changeProducts(await response.json());
+    }
+    callProducts();
     
     return (
         <div>
             <h1 className='mt-2 text-blue-800 text-6xl leading-8 font-bold pb-8 text-left pl-72'>
                     Fly. Buy. Enjoy.
             </h1>
-            <div className="bg-no-repeat bg-plane-sunset h-96 w-auto bg-center pl-[450px] pt-14">
+            <div className="bg-no-repeat bg-plane-sunset h-96 w-auto bg-center pl-[450px] pt-14 mb-2s0">
                 <form className='pb-3'>
                     <label className='mt-2 text-2xl leading-8 font-semibold sm:text-1xl pb-2 pr-8'>
                         Search a Product.
@@ -76,8 +88,33 @@ function Marketplace() {
                  </Col>
              </Row>
             </div>
+            <div className='text-blue-800 text-6xl leading-8 font-bold text-left pl-64 pt-20 pb-10'>
+                Current Listings
+            </div>
+            <div className="grid grid-cols-2 mx-56">
+            {products.map((product: {
+                quantity: number;
+                curr_offer: number;
+                title: string;
+                image_url: string; id: React.Key | null | undefined; 
+}) => 
+                <div className='mx-10 mb-10 w-[480px] h-64 bg-rose-300 rounded-lg grid grid-cols-2 grid-rows-2 gap-0'
+                key={product.id}>
+                <div className="w-40 h-40 bg-white ml-8 rounded-lg mt-5">
+                    <Image src={product.image_url} alt="no valid img url" className='pt-6' width={1000} height={1000} />
+                </div>
+                <div className="w-50 h-40 mr-8 rounded-lg mt-5 text-2xl">
+                    <h1 className="pb-4 font-semibold">{product.title}</h1>
+                    <h1 className="pb-2">Offer Price: {product.curr_offer}</h1>
+                    <h1 className="pb-10">Quantity Offered: {product.quantity}</h1>
+                    <button type="submit"
+                    className='bg-green-700 hover:bg-green-900 text-white font-bold py-2 px-4 rounded-lg'>
+                    Accept Offer
+                    </button>
+                </div>
+                </div>
+            )}
+            </div>
         </div>
     )
 }
-
-export default Marketplace;

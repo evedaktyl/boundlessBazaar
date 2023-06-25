@@ -116,12 +116,12 @@ function SignUpPage() {
                     className='bg-green-700 hover:bg-green-900 text-white font-bold py-2 px-4 rounded'>
                     Submit
                 </button>
-                <Link href='/SignInPage'>
+                <Link href='/auth/signIn'>
                     <h1 className='mt-2 text-blue-800 text-1xl font-semibold text-left py-6 underline'>
                     Already have an account? Sign in here!
                     </h1>
                 </Link>
-                <Link href={'/SignInPage'} className="font-semibold text-blue-800 text-3xl">
+                <Link href={'/auth/signIn'} className="font-semibold text-blue-800 text-3xl">
                     {lowerText} 
                 </Link>
             </div>
