@@ -33,22 +33,22 @@ function NavBar() {
       <Menu.Items className="text-sm font-semibold leading-6 text-gray-900">
         <Menu.Item>
           {({ active }) => (
-            <a
+            <Link
               className='hover:text-blue-700'
               href="/profile"
             >
               View Profile  |
-            </a>
+            </Link>
           )}
         </Menu.Item>
         <Menu.Item>
           {({ active }) => (
-            <a
+            <Link
               className='hover:text-blue-700'
               href="/auth/signOut"
             >
                |  Sign Out
-            </a>
+            </Link>
           )}
         </Menu.Item>
       </Menu.Items>
