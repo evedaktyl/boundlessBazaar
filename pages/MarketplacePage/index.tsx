@@ -9,9 +9,15 @@ import { useRouter } from "next/router";
 export default function Marketplace() {
     const session:any = useSession();
     const router = useRouter();
-    const [searchedProductName, changeSearchedProductName] = useState('');
+
+    const [searchedProductName, setSearchedProductName] = useState("");
+  const [purchaseCountry, setPurchaseCountry] = useState("");
+  const [deliveryCountry, setDeliveryCountry] = useState("");
+  const [purchaseState, setPurchaseState] = useState("");
+  const [deliveryState, setDeliveryState] = useState("");
+
     const productNameHandler = (e: any) => {
-        changeSearchedProductName(e.currentTarget.value);
+        setSearchedProductName(e.currentTarget.value);
     }
     const [products, changeProducts] = useState<any>([]);
     const callProducts = async () => {
@@ -90,8 +96,8 @@ export default function Marketplace() {
                         Product Purchase Country:
                     </label>
                     <div>
-                    <input type="text" onChange={productNameHandler} value={searchedProductName}
-                    className='rounded-lg text-1xl py-1 px-3 w-60' />
+                    <input type="text" onChange={(e) => setPurchaseCountry(e.currentTarget.value)} value={purchaseCountry}
+                    className='rounded-lg text-1xl py-1 px-3 w-60  text-black' />
                     </div>
                 </form>
                 <form className='pb-3'>
@@ -99,8 +105,8 @@ export default function Marketplace() {
                         Product Delivery Country:
                     </label>
                     <div>
-                    <input type="text" onChange={productNameHandler} value={searchedProductName}
-                    className='rounded-lg text-1xl py-1 px-3 w-60' />
+                    <input type="text" onChange={(e) => setDeliveryCountry(e.currentTarget.value)} value={deliveryCountry}
+                    className='rounded-lg text-1xl py-1 px-3 w-60  text-black' />
                     </div>
                 </form>
                  </Col>
@@ -110,8 +116,8 @@ export default function Marketplace() {
                         Product Purchase State:
                     </label>
                     <div>
-                    <input type="text" onChange={productNameHandler} value={searchedProductName}
-                    className='rounded-lg text-1xl py-1 px-3 w-60' />
+                    <input type="text" onChange={(e) => setPurchaseState(e.currentTarget.value)} value={purchaseState}
+                    className='rounded-lg text-1xl py-1 px-3 w-60  text-black' />
                     </div>
                 </form>
                 <form className='pb-3'>
@@ -119,8 +125,8 @@ export default function Marketplace() {
                         Product Delivery State:
                     </label>
                     <div>
-                    <input type="text" onChange={productNameHandler} value={searchedProductName}
-                    className='rounded-lg text-1xl py-1 px-3 w-60' />
+                    <input type="text" onChange={(e) => setDeliveryState(e.currentTarget.value)} value={deliveryState}
+                    className='rounded-lg text-1xl py-1 px-3 w-60  text-black' />
                     </div>
                 </form>
                 </Col>
