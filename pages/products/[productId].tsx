@@ -5,19 +5,7 @@ import prisma from "db";
 export default function ProductListing() {
     const router = useRouter();
     const { productId } = router.query;
-    const [product, setProduct] = useState<null | {
-        id: number;
-        url: string;
-        created_at: Date;
-        title: string;
-        details: string;
-        country: string;
-        state: string;
-        city: string;
-        buyer_id: number;
-        traveller_id: number | null;
-        status: string;
-      }>(null);
+    const [product, setProduct] = useState<any>(null);
 
     //fetching individual product details
     useEffect(() => {
