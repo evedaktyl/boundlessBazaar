@@ -1,3 +1,5 @@
+'use client';
+
 import ProductRequestForm from '../../components/ProductRequestForm'
 import { useSession } from 'next-auth/react'
 import { useEffect } from 'react';

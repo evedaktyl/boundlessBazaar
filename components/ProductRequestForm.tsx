@@ -77,33 +77,33 @@ export default function ProductRequestForm() {
                 <Row className='grid grid-cols-3'>
                   <div className='pb-10'>
                     <h1>Product Country</h1>
-                    <input className='w-24 rounded' name="productCountry" value={formData.productCountry} onChange={handleChange} />
+                    <input className='w-24 text-black rounded' name="productCountry" value={formData.productCountry} onChange={handleChange} />
                   </div>
                   <div className='pl-10 pb-10'>
                     <h1>Product State</h1>
-                    <input className='w-24 rounded' name="productState" value={formData.productState} onChange={handleChange} />
+                    <input className='w-24 text-black rounded' name="productState" value={formData.productState} onChange={handleChange} />
                   </div>
                   <div className='pl-20 pb-10'>
                     <h1>Product City</h1>
-                    <input className='w-24 rounded' name="productCity" value={formData.productCity} onChange={handleChange} />
+                    <input className='w-24 text-black rounded' name="productCity" value={formData.productCity} onChange={handleChange} />
                   </div>
                 </Row>
                 <div className='pb-10'>
                   <h1>Enter Product URL</h1>
-                  <input className='w-96 rounded' name="productURL" value={formData.productURL} onChange={handleChange} />
+                  <input className='w-96 text-black rounded' name="productURL" value={formData.productURL} onChange={handleChange} />
                 </div>
                 <div className='pb-10'>
                   <h1>Product Name + Selection</h1>
-                  <input className='w-96 rounded' name="productName" value={formData.productName} onChange={handleChange} />
+                  <input className='w-96 text-black rounded' name="productName" value={formData.productName} onChange={handleChange} />
                 </div>
                 <Row className='grid grid-cols-2'>
                   <div className='pb-10'>
                     <h1>Quantity</h1>
-                    <input className='w-44 rounded' name="quantity" value={formData.quantity} onChange={handleChange} />
+                    <input className='w-44 text-black rounded' name="quantity" value={formData.quantity} onChange={handleChange} />
                   </div>
                   <div className='pl-20 pb-10'>
                     <h1>YourOffer</h1>
-                    <input className='w-44 rounded' name="yourOffer" value={formData.yourOffer} onChange={handleChange} />
+                    <input className='w-44 text-black rounded' name="yourOffer" value={formData.yourOffer} onChange={handleChange} />
                   </div>
                 </Row>
               </Col>
@@ -120,25 +120,25 @@ export default function ProductRequestForm() {
           <Col className='pt-20 pl-52'>
             <div className='pb-10'>
               <h1>Name</h1>
-              <input className='w-96 rounded' name="name" value={formData.name} onChange={handleChange} />
+              <input className='w-96 text-black rounded' name="name" value={formData.name} onChange={handleChange} />
             </div>
             <Row className='grid grid-cols-3'>
               <div className='pb-10'>
                 <h1>Delivery Country</h1>
-                <input className='w-24 rounded' name="deliveryCountry" value={formData.deliveryCountry} onChange={handleChange} />
+                <input className='w-24 text-black rounded' name="deliveryCountry" value={formData.deliveryCountry} onChange={handleChange} />
               </div>
               <div className='pl-10 pb-10'>
                 <h1>Delivery State</h1>
-                <input className='w-24 rounded' name="deliveryState" value={formData.deliveryState} onChange={handleChange} />
+                <input className='w-24 text-black rounded' name="deliveryState" value={formData.deliveryState} onChange={handleChange} />
               </div>
               <div className='pl-20 pb-10'>
                 <h1>Delivery City</h1>
-                <input className='w-24 rounded' name="deliveryCity" value={formData.deliveryCity} onChange={handleChange} />
+                <input className='w-24 text-black rounded' name="deliveryCity" value={formData.deliveryCity} onChange={handleChange} />
               </div>
             </Row>
             <div className='pb-10'>
               <h1>Contact Number</h1>
-              <input className='w-96 rounded' name="contactNumber" value={formData.contactNumber} onChange={handleChange} />
+              <input className='w-96 text-black rounded' name="contactNumber" value={formData.contactNumber} onChange={handleChange} />
             </div>
           </Col>
         </Row>
