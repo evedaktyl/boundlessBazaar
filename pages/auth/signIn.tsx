@@ -31,9 +31,7 @@ function SignInPage() {
         })
 
         if (res?.status == 200) {
-            const fetchName = session.data?.user?.name;
-            changeName(fetchName);
-            setTimeout(() => changeLowerText('Sucessful Sign In! Welcome back ' + name + '!'), 1000)
+            setTimeout(() => changeLowerText('Sucessful Sign In. Welcome back!'), 1000)
             console.log(name);  
         } else {
             changeLowerText('Incorrect email or password. Please try again!')

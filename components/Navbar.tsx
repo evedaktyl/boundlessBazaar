@@ -1,6 +1,6 @@
 'use client';
 
-import { Popover } from '@headlessui/react';
+import { Menu, Popover } from '@headlessui/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
@@ -16,10 +16,43 @@ function NavBar() {
 
   if (session.status === "authenticated") {
     lowerText =
-    <Link href="/auth/signOut"
+    // <Link href="/auth/signOut"
+    // className="text-sm font-semibold leading-6 text-gray-900 hover:text-blue-700">
+    // {session.data.user?.name} | Sign Out<span aria-hidden="true">&rarr;</span>
+    // </Link>;
+
+    /*<Link href="/auth/signOut"
     className="text-sm font-semibold leading-6 text-gray-900 hover:text-blue-700">
     {session.data.user?.name} | Sign Out<span aria-hidden="true">&rarr;</span>
-    </Link>;
+    </Link>;*/
+    <Menu> 
+      <Menu.Button className="text-sm font-semibold leading-6 text-gray-900 hover:text-blue-700">
+        {session.data.user?.name} <span aria-hidden="true">&rarr;</span> 
+      </Menu.Button>
+      <Menu.Items className="text-sm font-semibold leading-6 text-gray-900">
+        <Menu.Item>
+          {({ active }) => (
+            <a
+              className='hover:text-blue-700'
+              href="/profile"
+            >
+              View Profile  |
+            </a>
+          )}
+        </Menu.Item>
+        <Menu.Item>
+          {({ active }) => (
+            <a
+              className='hover:text-blue-700'
+              href="/auth/signOut"
+            >
+               |  Sign Out
+            </a>
+          )}
+        </Menu.Item>
+      </Menu.Items>
+    </Menu>
+
   }
   return (
     <header>
