@@ -2,8 +2,13 @@
 import Image from "next/image";
 import { useState } from "react";
 import {Row, Col } from "react-bootstrap"
+import { useSession } from "next-auth/react";
+import { json } from "stream/consumers";
+import { useRouter } from "next/router";
 
 export default function Marketplace() {
+    const session:any = useSession();
+    const router = useRouter();
     const [searchedProductName, changeSearchedProductName] = useState('');
     const productNameHandler = (e: any) => {
         changeSearchedProductName(e.currentTarget.value);
@@ -28,6 +33,34 @@ export default function Marketplace() {
         
     }
     callProducts();
+
+    const handleOffer = async (e:any, productID:any) => {
+        if (session.status !== 'authenticated') {
+            router.push('/MarketplacePage/NoSessionError');
+            return;
+        }
+        const data = {
+            userID: session.data.user.id,
+            productID: productID
+        }
+        console.log(productID);
+        e.preventDefault();
+        const response = await fetch('/api/offerAccept', {
+            method: 'POST',
+            headers: {
+            'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+        });
+        if (response.ok) {
+            router.push('/MarketplacePage/OfferAccepted');
+        } else {
+            const data:any = await response.json();
+            console.error(data.message);
+        }
+
+    }
+
 
     return (
         <div>
@@ -104,7 +137,7 @@ export default function Marketplace() {
                 curr_offer: number;
                 title: string;
                 image_url: string; id: React.Key | null | undefined; 
-}) => 
+            }) => 
                 <div className='mx-10 mb-10 w-[480px] h-64 bg-rose-300 rounded-lg grid grid-cols-2 grid-rows-2 gap-0'
                 key={product.id}>
                 <div className="w-40 h-40 bg-white ml-8 rounded-lg mt-5">
@@ -125,7 +158,8 @@ export default function Marketplace() {
                     <h1 className="pb-2">Offer Price: {product.curr_offer}</h1>
                     <h1 className="pb-10">Quantity Offered: {product.quantity}</h1>
                     <button type="submit"
-                    className='bg-green-700 hover:bg-green-900 text-white font-bold py-2 px-4 rounded-lg'>
+                    className='bg-green-700 hover:bg-green-900 text-white font-bold py-2 px-4 rounded-lg'
+                    onClick={() => handleOffer(event, product.id)}>
                     Accept Offer
                     </button>
                 </div>
