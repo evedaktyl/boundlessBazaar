@@ -25,7 +25,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       });
       
       if (!findTraveller) {
-        const traveller = await prisma.travelers.create({
+        await prisma.travelers.create({
             data: {
             country: product?.collect_country,
             state: product?.collect_state,
@@ -38,8 +38,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 },
             }
         });
-    } else {
-        const updatedTraveller = await prisma.travelers.update({
+      } else {
+        await prisma.travelers.update({
             where: {travellerId: userID},
             data: {
                 country: product?.collect_country,

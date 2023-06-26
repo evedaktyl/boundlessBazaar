@@ -14,7 +14,6 @@ function NavBar() {
     Sign In / Sign Up <span aria-hidden="true">&rarr;</span>
     </Link>;
 
-  const userId = session.status === 'authenticated' ? session.data.user.id : null;
   if (session.status === "authenticated") {
     lowerText =
     // <Link href="/auth/signOut"
