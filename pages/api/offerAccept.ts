@@ -33,7 +33,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             travellerId: userID,
             products: {
                 connect: {
-                    id: userID,
+                    id: productID,
                     }
                 },
             }
@@ -48,7 +48,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 travellerId: userID,
                 products: {
                     connect: {
-                        id: userID,
+                        id: productID,
                         }
                     },
             }
