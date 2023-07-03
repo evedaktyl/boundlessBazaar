@@ -64,11 +64,11 @@ export default function Marketplace() {
 
     return (
         <div>
-            <h1 className='mt-2 text-blue-800 text-6xl leading-8 font-bold pb-8 text-left pl-72'>
+            <h1 className='mt-2 text-blue-800 text-6xl leading-8 font-bold pb-8 text-left mx-[15%]'>
                     Fly. Buy. Enjoy.
             </h1>
-            <div className="bg-no-repeat bg-plane-sunset h-96 w-auto bg-center pl-[450px] pt-14 mb-2s0">
-                <form className='pb-3'>
+            <div className="bg-no-repeat bg-plane-sunset h-96 ml-[15%] pt-14 mb-2s0">
+                <form className='pb-3 mx-[10%]'>
                     <label className='mt-2 text-2xl leading-8 font-semibold sm:text-1xl pb-2 pr-8'>
                         Search a Product.
                         </label>
@@ -83,7 +83,7 @@ export default function Marketplace() {
                     </a>
                     </div>
                 </form>
-                <Row className="flex pt-4">
+                <Row className="flex pt-4 mx-[10%]">
                  <Col className='pr-20'>
                  <form className='pb-3'>
                     <label className='mt-2 text-1xl leading-8 font-semibold sm:text-1xl pb-2 pr-8'>
@@ -126,10 +126,10 @@ export default function Marketplace() {
                 </Col>
              </Row>
             </div>
-            <div className='text-blue-800 text-6xl leading-8 font-bold text-left pl-64 pt-20 pb-10'>
+            <div className='text-blue-800 text-6xl leading-8 font-bold text-left pt-20 pb-10 ml-[15%]'>
                 Current Listings
             </div>
-            <div className="grid grid-cols-2 mx-56">
+            <div className="grid grid-cols-2 mx-[15%]">
             {products.map((product: {
                 deliver_country:string,
                 collect_country:string,
@@ -138,7 +138,7 @@ export default function Marketplace() {
                 title: string;
                 image_url: string; id: React.Key | null | undefined; 
             }) => 
-                <div className='mx-10 mb-10 w-[480px] h-64 bg-rose-300 rounded-lg grid grid-cols-2 grid-rows-2 gap-0'
+                <div className='mb-10 w-[480px] h-64 bg-rose-300 rounded-lg grid grid-cols-2 gap-10'
                 key={product.id}>
                 <div className="w-40 h-40 bg-white ml-8 rounded-lg mt-5">
                     <div className="w-[200px] h-[200px]">
@@ -153,7 +153,7 @@ export default function Marketplace() {
                     </div>
                 </div>
                 
-                <div className="w-50 h-40 mr-8 rounded-lg mt-5 text-2xl">
+                <div className="w-50 h-40 mr-2 rounded-lg mt-5 text-2xl">
                     <h1 className="pb-4 font-semibold">{product.title}</h1>
                     <h1 className="pb-2">Offer Price: {product.curr_offer}</h1>
                     <h1 className="pb-10">Quantity Offered: {product.quantity}</h1>
