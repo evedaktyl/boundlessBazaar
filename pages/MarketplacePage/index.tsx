@@ -61,6 +61,18 @@ export default function Marketplace() {
 
     }
 
+    function smallText(text: string, limit: number) {
+        var str:string = text;
+        if(str.length > limit) str = str.substring(0, limit)+"...";
+        return str;
+    }
+
+    function smallNum(num: number) {
+        var str:string = num.toString();
+        if(str.length > 4) str = str.substring(0,4)+"...";
+        return str;
+    }
+
 
     return (
         <div>
@@ -152,14 +164,14 @@ export default function Marketplace() {
                     </div>
                     <br />
                     <div>
-                        {product.collect_country} {'->'} {product.deliver_country}
+                        {smallText(product.collect_country, 6)} {'->'} {smallText(product.deliver_country, 6)}
                     </div>
                 </Col>
                 
                 <Col className="mx-1 rounded-lg mt-5 text-2xl">
-                    <h1 className="pb-4 font-semibold">{product.title}</h1>
-                    <h1 className="pb-2">Offer Price: {product.curr_offer}</h1>
-                    <h1 className="pb-10">Quantity Offered: {product.quantity}</h1>
+                    <h1 className="pb-4 font-semibold">{smallText(product.title, 15)}</h1>
+                    <h1 className="pb-2">Offer Price: ${smallNum(product.curr_offer)}</h1>
+                    <h1 className="pb-10">Quantity Offered: {smallNum(product.quantity)}</h1>
                     <button type="submit"
                     className='bg-green-700 hover:bg-green-900 text-white font-bold py-2 px-4 rounded-lg'
                     onClick={() => handleOffer(event, product.id)}>
