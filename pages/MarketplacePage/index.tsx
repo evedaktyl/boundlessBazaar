@@ -67,14 +67,26 @@ export default function Marketplace() {
 
     }
 
+    function smallText(text: string, limit: number) {
+        var str:string = text;
+        if(str.length > limit) str = str.substring(0, limit)+"...";
+        return str;
+    }
+
+    function smallNum(num: number) {
+        var str:string = num.toString();
+        if(str.length > 4) str = str.substring(0,4)+"...";
+        return str;
+    }
+
 
     return (
         <div>
-            <h1 className='mt-2 text-blue-800 text-6xl leading-8 font-bold pb-8 text-left pl-72'>
+            <h1 className='mt-2 text-blue-800 text-6xl leading-8 font-bold pb-8 text-left mx-[15%]'>
                     Fly. Buy. Enjoy.
             </h1>
-            <div className="bg-no-repeat bg-plane-sunset h-96 w-auto bg-center pl-[450px] pt-14 mb-2s0">
-                <form className='pb-3'>
+            <div className="bg-no-repeat bg-plane-sunset h-96 ml-[15%] pt-14 mb-2s0">
+                <form className='pb-3 mx-[10%]'>
                     <label className='mt-2 text-2xl leading-8 font-semibold sm:text-1xl pb-2 pr-8'>
                         Search a Product.
                         </label>
@@ -89,7 +101,7 @@ export default function Marketplace() {
                     </a>
                     </div>
                 </form>
-                <Row className="flex pt-4">
+                <Row className="flex pt-4 mx-[10%]">
                  <Col className='pr-20'>
                  <form className='pb-3'>
                     <label className='mt-2 text-1xl leading-8 font-semibold sm:text-1xl pb-2 pr-8'>
@@ -110,7 +122,7 @@ export default function Marketplace() {
                     </div>
                 </form>
                  </Col>
-                 <Col className=''>
+                 <Col>
                  <form className='pb-3'>
                     <label className='mt-2 text-1xl leading-8 font-semibold sm:text-1xl pb-2 pr-8'>
                         Product Purchase State:
@@ -132,10 +144,10 @@ export default function Marketplace() {
                 </Col>
              </Row>
             </div>
-            <div className='text-blue-800 text-6xl leading-8 font-bold text-left pl-64 pt-20 pb-10'>
+            <div className='text-blue-800 text-6xl leading-8 font-bold text-left pt-20 pb-10 ml-[15%]'>
                 Current Listings
             </div>
-            <div className="grid grid-cols-2 mx-56">
+            <div className="grid grid-cols-2 mx-[15%] gap-2">
             {products.map((product: {
                 deliver_country:string,
                 collect_country:string,
@@ -144,31 +156,34 @@ export default function Marketplace() {
                 title: string;
                 image_url: string; id: React.Key | null | undefined; 
             }) => 
-                <div className='mx-10 mb-10 w-[480px] h-64 bg-rose-300 rounded-lg grid grid-cols-2 grid-rows-2 gap-0'
-                key={product.id}>
-                <div className="w-40 h-40 bg-white ml-8 rounded-lg mt-5">
-                    <div className="w-[200px] h-[200px]">
-                    {/* <Image src={"/public/BB_icon"}
-                    placeholder={'blur'}
-                    blurDataURL={"/public/BB_icon"}
-                     alt="no valid img url"
-                      className='pt-6' width={1000} height={1000} /> */}
+                <div className='mb-10 w-[480px] h-64 bg-rose-300 rounded-lg grid grid-cols-2 gap-1'
+                    key={product.id}>
+                <Col className="ml-5 w-40">
+                    <div className="w-40 h-40 bg-white rounded-lg mt-5">
+                        <div className="w-[200px] h-[200px]">
+                        {/* <Image src={"/public/BB_icon"}
+                        placeholder={'blur'}
+                        blurDataURL={"/public/BB_icon"}
+                        alt="no valid img url"
+                        className='pt-6' width={1000} height={1000} /> */}
+                        </div>
                     </div>
+                    <br />
                     <div>
-                        {product.collect_country} {'->'} {product.deliver_country}
+                        {smallText(product.collect_country, 6)} {'->'} {smallText(product.deliver_country, 6)}
                     </div>
-                </div>
+                </Col>
                 
-                <div className="w-50 h-40 mr-8 rounded-lg mt-5 text-2xl">
-                    <h1 className="pb-4 font-semibold">{product.title}</h1>
-                    <h1 className="pb-2">Offer Price: {product.curr_offer}</h1>
-                    <h1 className="pb-10">Quantity Offered: {product.quantity}</h1>
+                <Col className="mx-1 rounded-lg mt-5 text-2xl">
+                    <h1 className="pb-4 font-semibold">{smallText(product.title, 15)}</h1>
+                    <h1 className="pb-2">Offer Price: ${smallNum(product.curr_offer)}</h1>
+                    <h1 className="pb-10">Quantity Offered: {smallNum(product.quantity)}</h1>
                     <button type="submit"
                     className='bg-green-700 hover:bg-green-900 text-white font-bold py-2 px-4 rounded-lg'
                     onClick={() => handleOffer(event, product.id)}>
                     Accept Offer
                     </button>
-                </div>
+                </Col>
                 </div>
             )}
             </div>
