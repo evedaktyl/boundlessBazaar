@@ -82,50 +82,52 @@ export default function Marketplace() {
             if (response.ok) {
                 changeSearchedproducts(await response.json());
 
-                searchResultComponentChanged( 
+                const searchedProds = await searchedProducts.map((product: {
+                    deliver_country:string,
+                    collect_country:string,
+                    quantity: number;
+                    curr_offer: number;
+                    title: string;
+                    image_url: string; id: React.Key | null | undefined; 
+                }) => 
+                    <div className='mb-10 w-[480px] h-64 bg-rose-300 rounded-lg grid grid-cols-2 gap-1'
+                        key={product.id}>
+                    <Col className="ml-5 w-40">
+                        <div className="w-40 h-40 bg-white rounded-lg mt-5">
+                            <div className="w-[200px] h-[200px]">
+                            <Image src={"/trolley.png"}
+                            placeholder={'blur'}
+                            blurDataURL={"/public/BB_icon"}
+                            alt="no valid img url"
+                            className='pt-6' width={160} height={160} />
+                            </div>
+                        </div>
+                        <br />
+                        <div>
+                            {smallText(product.collect_country, 6)} {'->'} {smallText(product.deliver_country, 6)}
+                        </div>
+                    </Col>
+                    
+                    <Col className="mx-1 rounded-lg mt-5 text-2xl">
+                        <h1 className="pb-4 font-semibold">{smallText(product.title, 15)}</h1>
+                        <h1 className="pb-2">Offer Price: ${smallNum(product.curr_offer)}</h1>
+                        <h1 className="pb-10">Quantity Offered: {smallNum(product.quantity)}</h1>
+                        <button type="submit"
+                        className='bg-green-700 hover:bg-green-900 text-white font-bold py-2 px-4 rounded-lg'
+                        onClick={() => handleOffer(event, product.id)}>
+                        Accept Offer
+                        </button>
+                    </Col>
+                </div>
+                )
+
+                searchResultComponentChanged(
                 <div>
                     <div className='text-blue-800 text-6xl leading-8 font-bold text-left pt-20 pb-10 ml-[15%]'>
                         Searched product listings:
                     </div>
                     <div className="grid grid-cols-2 mx-[15%] gap-2">
-                    {searchedProducts.map((product: {
-                        deliver_country:string,
-                        collect_country:string,
-                        quantity: number;
-                        curr_offer: number;
-                        title: string;
-                        image_url: string; id: React.Key | null | undefined; 
-                    }) => 
-                        <div className='mb-10 w-[480px] h-64 bg-rose-300 rounded-lg grid grid-cols-2 gap-1'
-                            key={product.id}>
-                        <Col className="ml-5 w-40">
-                            <div className="w-40 h-40 bg-white rounded-lg mt-5">
-                                <div className="w-[200px] h-[200px]">
-                                <Image src={"/trolley.png"}
-                                placeholder={'blur'}
-                                blurDataURL={"/public/BB_icon"}
-                                alt="no valid img url"
-                                className='pt-6' width={160} height={160} />
-                                </div>
-                            </div>
-                            <br />
-                            <div>
-                                {smallText(product.collect_country, 6)} {'->'} {smallText(product.deliver_country, 6)}
-                            </div>
-                        </Col>
-                        
-                        <Col className="mx-1 rounded-lg mt-5 text-2xl">
-                            <h1 className="pb-4 font-semibold">{smallText(product.title, 15)}</h1>
-                            <h1 className="pb-2">Offer Price: ${smallNum(product.curr_offer)}</h1>
-                            <h1 className="pb-10">Quantity Offered: {smallNum(product.quantity)}</h1>
-                            <button type="submit"
-                            className='bg-green-700 hover:bg-green-900 text-white font-bold py-2 px-4 rounded-lg'
-                            onClick={() => handleOffer(event, product.id)}>
-                            Accept Offer
-                            </button>
-                        </Col>
-                    </div>
-                    )}
+                    {searchedProds}
                     </div>
                 </div>
                 );
