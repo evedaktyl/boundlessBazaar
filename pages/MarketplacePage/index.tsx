@@ -3,7 +3,6 @@ import Image from "next/image";
 import { useState } from "react";
 import {Row, Col } from "react-bootstrap"
 import { useSession } from "next-auth/react";
-import { json } from "stream/consumers";
 import { useRouter } from "next/router";
 
 export default function Marketplace() {
@@ -161,11 +160,11 @@ export default function Marketplace() {
                 <Col className="ml-5 w-40">
                     <div className="w-40 h-40 bg-white rounded-lg mt-5">
                         <div className="w-[200px] h-[200px]">
-                        {/* <Image src={"/public/BB_icon"}
+                        <Image src={"/trolley.png"}
                         placeholder={'blur'}
                         blurDataURL={"/public/BB_icon"}
                         alt="no valid img url"
-                        className='pt-6' width={1000} height={1000} /> */}
+                        className='pt-6' width={160} height={160} />
                         </div>
                     </div>
                     <br />
