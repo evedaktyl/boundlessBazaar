@@ -3,7 +3,6 @@ import Image from "next/image";
 import { useState } from "react";
 import {Row, Col } from "react-bootstrap"
 import { useSession } from "next-auth/react";
-import { json } from "stream/consumers";
 import { useRouter } from "next/router";
 
 export default function Marketplace() {
