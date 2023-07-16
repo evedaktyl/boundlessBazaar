@@ -16,6 +16,7 @@ model users {
   name          String @db.VarChar(255)
   buyer         buyers?
   traveler     travelers?
+  stripe_id     String?    @unique
 }
 
 model buyers {
