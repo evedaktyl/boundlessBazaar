@@ -4,7 +4,7 @@ import { useState } from "react";
 import {Row, Col } from "react-bootstrap"
 import { useSession } from "next-auth/react";
 import { json } from "stream/consumers";
-import { useRouter } from "next/router";
+import router, { Router, useRouter } from "next/router";
 
 export default function Marketplace() {
     const session:any = useSession();
@@ -82,6 +82,15 @@ export default function Marketplace() {
         }
     }
 
+    const initiatePayment = async () => {
+    
+        try {
+            router.push('/Payment');
+        } catch (error) {
+            console.log('error');
+        }
+    }
+
 
     return (
         <div>
@@ -153,7 +162,9 @@ export default function Marketplace() {
                 quantity: number;
                 curr_offer: number;
                 title: string;
-                image_url: string; id: React.Key | null | undefined; 
+                image_url: string; 
+                id: React.Key | null | undefined; 
+                status: string;
             }) => 
                 <div className='mx-10 mb-10 w-[480px] h-64 bg-rose-300 rounded-lg grid grid-cols-2 grid-rows-2 gap-0'
                 key={product.id}>
@@ -174,6 +185,14 @@ export default function Marketplace() {
                     <h1 className="pb-2 text-2xl">Offer Price: {product.curr_offer}</h1>
                     <h1 className="pb-2 text-2xl    ">Quantity Offered: {product.quantity}</h1>
                     <h1 className="pb-10 text-1xl">Description: {product.description}</h1>
+
+                    {product.status === 'Accepted' &&
+                    <button
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                    onClick={initiatePayment}>
+                    Proceed to Payment
+                  </button>
+                  }
                 </div>
                 </div>
             )}
@@ -189,7 +208,9 @@ export default function Marketplace() {
                 quantity: number;
                 curr_offer: number;
                 title: string;
-                image_url: string; id: React.Key | null | undefined; 
+                image_url: string; 
+                id: React.Key | null | undefined;
+                status: string; 
             }) => 
             <div className='mx-10 mb-10 w-[480px] h-64 bg-rose-300 rounded-lg grid grid-cols-2 grid-rows-2 gap-0'
             key={product.id}>
@@ -210,6 +231,7 @@ export default function Marketplace() {
                 <h1 className="pb-2 text-2xl">Offer Price: {product.curr_offer}</h1>
                 <h1 className="pb-2 text-2xl    ">Quantity Offered: {product.quantity}</h1>
                 <h1 className="pb-10 text-1xl">Description: {product.description}</h1>
+                <h1 className="pb-10 text-1xl">Status: {product.status}</h1>
             </div>
             </div>
             )}
