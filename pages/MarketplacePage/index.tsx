@@ -7,6 +7,10 @@ import { useRouter } from "next/router";
 
 export default function Marketplace() {
     const session:any = useSession();
+    const sessionID = session.data?.user?.id;
+    const sessionName = session.data?.user?.name;
+    const sessionEmail = session.data?.user?.email;
+    //console.log(sessionID);
     const router = useRouter();
 
     const [searchedProductName, setSearchedProductName] = useState("");
@@ -145,26 +149,140 @@ export default function Marketplace() {
             router.push('/MarketplacePage/NoSessionError');
             return;
         }
+
         const data = {
-            userID: session.data.user.id,
-            productID: productID
+            userID: sessionID,
+            productID: productID,
+            userEmail: sessionEmail,
+            userName: sessionName,
         }
         console.log(productID);
         e.preventDefault();
-        const response = await fetch('/api/offerAccept', {
-            method: 'POST',
-            headers: {
-            'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data)
-        });
-        if (response.ok) {
-            router.push('/MarketplacePage/OfferAccepted');
-        } else {
-            const data:any = await response.json();
-            console.error(data.message);
+
+        const stripeid = session.data?.user?.stripe_id;
+        console.log(stripeid);
+        //for now still shows null :( sad
+
+        if (stripeid !== null) {
+            console.log('checking onboarding of stripeid: ' + stripeid);
+            const dataToOnboarded = {
+                accountID: stripeid,
+                userID: sessionID,
+            }
+            const checkOnboardingResponse = await fetch('/api/onboarded', {
+                method: 'POST', 
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(dataToOnboarded)
+            });
+
+            const checkOnboardingData = await checkOnboardingResponse.json();
+            if (checkOnboardingData.success) {
+                console.log('onboarding successfully completed')
+                const response = await fetch('/api/offerAccept', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data),
+                });
+                if (response.ok) {
+                    router.push('/MarketplacePage/OfferAccepted');
+                    return;
+                } else {
+                    const data = await response.json();
+                    console.error(data.message);
+                }
+            } else {
+                console.log('onboarding failed to pass check')
+            }  
         }
 
+        
+             // Fetch the Stripe onboarding API first
+             const stripeOnboardingResponse = await fetch(`/api/onboarding`, {
+                method: 'POST',
+                headers: {
+                'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            });
+
+            let stripeOnboardingData = await stripeOnboardingResponse.json();
+            console.log(stripeOnboardingData);
+            const stripeAccLink = stripeOnboardingData.link;
+            const stripe_account_id = stripeOnboardingData.accountID;
+
+            console.log(stripe_account_id);
+            //open stripe onboarding in another tab
+            window.open(stripeAccLink, '_blank');
+        
+            
+
+            //router.push(stripeOnboardingData.link);
+        
+            // window.onpopstate = async () => {
+            //     console.log('fetching onboarded');
+            //     try {
+            //         // Fetch data from the onboarded API to check onboarding status
+            //         const onboardedResponse = await fetch('/api/onboarded');
+            //         const onboardedData = await onboardedResponse.json();
+    
+            //         if (onboardedData.success === undefined) {
+            //             console.log('Error with onboarding');
+            //             router.push('/MarketplacePage');
+            //         }
+    
+            //         if (onboardedData.success) {
+            //             // Continue with the rest of your handleSubmit logic
+            //             const response = await fetch('/api/offerAccept', {
+            //                 method: 'POST',
+            //                 headers: {
+            //                     'Content-Type': 'application/json',
+            //                 },
+            //                 body: JSON.stringify(data),
+            //             });
+            //             if (response.ok) {
+            //                 router.push('/MarketplacePage/OfferAccepted');
+            //             } else {
+            //                 const data = await response.json();
+            //                 console.error(data.message);
+            //             }
+            //         } else {
+            //             console.log('Stripe onboarding not successful');
+            //             router.push('/MarketplacePage');
+            //         }
+            //     } catch (error) {
+            //         console.error('Error:', error);
+            //         console.log('Failed to check account creation.');
+            //         router.push('/MarketplacePage');
+            //     }
+            // };
+            // if (stripeOnboardingData.success == undefined) {
+            //     console.log('error with onboarding');
+            //     router.push('MarketplacePage');
+            // }
+            // if (stripeOnboardingData.success) {
+            //     const response = await fetch('/api/offerAccept', {
+            //         method: 'POST',
+            //         headers: {
+            //         'Content-Type': 'application/json',
+            //         },
+            //         body: JSON.stringify(data)
+            //     });
+            //     if (response.ok) {
+            //         router.push('/MarketplacePage/OfferAccepted');
+            //     } else {
+            //         const data:any = await response.json();
+            //         console.error(data.message);
+            //     }
+        
+            // } else {
+            //     console.log('stripe onboarding not successful')
+            //     router.push('MarketplacePage');
+            // }
+        
     }
 
     function smallText(text: string, limit: number) {

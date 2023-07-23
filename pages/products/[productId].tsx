@@ -1,6 +1,6 @@
 import {useRouter} from 'next/router';
 import { useState, useEffect } from 'react';
-import prisma from "db";
+import prisma from "@/lib/prisma";
 
 export default function ProductListing() {
     const router = useRouter();

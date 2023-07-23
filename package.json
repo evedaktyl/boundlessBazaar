@@ -30,6 +30,6 @@
     "typescript": "5.1.3"
   },
   "devDependencies": {
-    "prisma": "^4.16.0"
+    "prisma": "^5.0.0"
   }
 }

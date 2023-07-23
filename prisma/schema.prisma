@@ -17,6 +17,7 @@ model users {
   buyer         buyers?
   traveler     travelers?
   stripe_id     String?    @unique
+  onboarding_completed Boolean?
 }
 
 model buyers {
