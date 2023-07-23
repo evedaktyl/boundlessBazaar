@@ -144,6 +144,13 @@ export default function Marketplace() {
         
     }
 
+    /** 
+     * Directs users to onboard with stripe before accepting a product request
+     * Once onboarded, product details are updated and traveler object is made
+     * @param e 
+     * @param productID 
+     * 
+     */
     const handleOffer = async (e:any, productID:any) => {
         if (session.status !== 'authenticated') {
             router.push('/MarketplacePage/NoSessionError');
@@ -156,19 +163,39 @@ export default function Marketplace() {
             userEmail: sessionEmail,
             userName: sessionName,
         }
-        console.log(productID);
         e.preventDefault();
 
-        const stripeid = session.data?.user?.stripe_id;
+        const stripeid = session.data.user.stripe_id;
+        const completedOnboarding = session.data.user.onboarding_completed;
         console.log(stripeid);
         //for now still shows null :( sad
 
+        //if onboarding completed 
+        if (completedOnboarding !== null) {
+            console.log('onboarding successfully completed')
+                const response = await fetch('/api/offerAccept', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data),
+                });
+                if (response.ok) {
+                    router.push('/MarketplacePage/OfferAccepted');
+                    return;
+                } else {
+                    const data = await response.json();
+                    console.error(data.message);
+                }
+        }
+
+        
         if (stripeid !== null) {
             console.log('checking onboarding of stripeid: ' + stripeid);
             const dataToOnboarded = {
                 accountID: stripeid,
                 userID: sessionID,
-            }
+            };
             const checkOnboardingResponse = await fetch('/api/onboarded', {
                 method: 'POST', 
                 headers: {
@@ -195,7 +222,7 @@ export default function Marketplace() {
                     console.error(data.message);
                 }
             } else {
-                console.log('onboarding failed to pass check')
+                console.log('onboarding failed to pass check, reregistering...')
             }  
         }
 
@@ -209,16 +236,70 @@ export default function Marketplace() {
                 body: JSON.stringify(data)
             });
 
-            let stripeOnboardingData = await stripeOnboardingResponse.json();
+            const stripeOnboardingData = await stripeOnboardingResponse.json();
             console.log(stripeOnboardingData);
             const stripeAccLink = stripeOnboardingData.link;
             const stripe_account_id = stripeOnboardingData.accountID;
-
             console.log(stripe_account_id);
+
+            const dataToUpdate = {
+                userID: sessionID,
+                accountID: stripe_account_id,
+            }; 
+            const updateUserResponse = await fetch ('api/updateStripeId', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(dataToUpdate)
+            });
+
             //open stripe onboarding in another tab
             window.open(stripeAccLink, '_blank');
         
-            
+            window.onpopstate = async () => {
+                console.log('fetching onboarded after submission');
+                try {
+                    // Fetch data from the onboarded API to check onboarding status
+                    console.log('checking onboarding of stripeid: ' + stripeid);
+            const dataToOnboarded2 = {
+                accountID: stripe_account_id,
+                userID: sessionID,
+            };
+            const checkOnboardingResponse = await fetch('/api/onboarded', {
+                method: 'POST', 
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(dataToOnboarded2)
+            });
+
+            const checkOnboardingData = await checkOnboardingResponse.json();
+        
+            if (checkOnboardingData.success) {
+                console.log('onboarding successfully completed')
+                const response = await fetch('/api/offerAccept', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data),
+                });
+                if (response.ok) {
+                    router.push('/MarketplacePage/OfferAccepted');
+                    return;
+                } else {
+                    const data = await response.json();
+                    console.error(data.message);
+                }
+            } else {
+                console.log('onboarding failed to pass check')
+                }  
+            } catch (error) {
+
+            }
+        };
+    }
 
             //router.push(stripeOnboardingData.link);
         
@@ -283,7 +364,6 @@ export default function Marketplace() {
             //     router.push('MarketplacePage');
             // }
         
-    }
 
     function smallText(text: string, limit: number) {
         var str:string = text;
