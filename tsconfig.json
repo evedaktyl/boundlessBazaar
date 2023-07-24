@@ -46,6 +46,6 @@
       "db": ["./lib/prisma"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "pages/api/auth/[...nextauth].js"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "pages/api/auth/[...nextauth].js", "pages/api/updateStripeId.js", "pages/api/onboarded.js", "pages/api/stripe/onboarding.js", "pages/api/stripe-onboarding.js"],
   "exclude": ["node_modules"]
 }

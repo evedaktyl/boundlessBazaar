@@ -82,10 +82,89 @@ export default function Marketplace() {
         }
     }
 
-    const initiatePayment = async () => {
-    
+    const initiatePayment = async (e:any, productID:any, productOffer:any, productTitle:any) => {
+        e.preventDefault();
+        console.log(session.data.user.stripeCustomerId);
+        if (session.data.user.stripeCustomerId !== null) {
+            console.log('customer_id exists, moving on to transfer...');
+                //
+                const transferDataSend1 = {
+                    buyer_userID: id,
+                    buyer_name: name,
+                    buyer_customer_id: session.data.user.stripeCustomerId,
+                    price: productOffer,
+                    productTitle: productTitle,
+                    productID: productID
+
+                };
+                const transferResponse = await fetch('/api/transfer', {
+                    method: 'POST',
+                    headers: {
+                    'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(transferDataSend1)
+                });
+                const transferData = await transferResponse.json();
+                if (transferData.transferred) {
+                    console.log('transferred');
+                    router.push('/Payment');
+                    return;
+                } else {
+                    console.log(
+                     'did not transfer'
+                    )
+                } 
+        }
+
+        const createCustomerDataSend = {
+            userID: id,
+            name: name,
+            username: uname,
+            email: email
+        }
+
         try {
-            router.push('/Payment');
+            const createCustomerResponse = await fetch('/api/createCustomer', {
+                method: 'POST',
+                headers: {
+                'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(createCustomerDataSend)
+            });
+
+            const createCustomerDataReceived = await createCustomerResponse.json();
+            if (createCustomerDataReceived.updated) {
+                console.log('moving on to transfer...');
+                //
+                const transferDataSend = {
+                    buyer_userID: id,
+                    buyer_name: name,
+                    buyer_customer_id: createCustomerDataReceived.stripeCustomerId,
+                    price: productOffer,
+                    productTitle: productTitle,
+                    productID: productID
+
+                };
+                console.log(productOffer);
+                const transferResponse = await fetch('/api/transfer', {
+                    method: 'POST',
+                    headers: {
+                    'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(transferDataSend)
+                });
+                const transferData = await transferResponse.json();
+                if (transferData.transferred) {
+                    console.log('transferred');
+                    router.push('/Payment');
+                } else {
+                    console.log(
+                     'did not transfer'
+                    )
+                }   
+            } else {
+                console.log('did not update');
+            }
         } catch (error) {
             console.log('error');
         }
@@ -189,7 +268,7 @@ export default function Marketplace() {
                     {product.status === 'Accepted' &&
                     <button
                     className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                    onClick={initiatePayment}>
+                    onClick={() => initiatePayment(event, product.id, product.curr_offer, product.title)}>
                     Proceed to Payment
                   </button>
                   }

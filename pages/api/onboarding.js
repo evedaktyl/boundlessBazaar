@@ -50,12 +50,12 @@ export default async function handler(req, res) {
         const accountID = account.id;
         console.log(accountID);
         console.log(userID);
-        await prisma.users.update({
-          where: {id: userID},
-          data: {
-              stripe_id: accountID
-          }
-        });
+        // await prisma.users.update({
+        //   where: {id: userID},
+        //   data: {
+        //       stripe_id: accountID
+        //   }
+        // });
       const accountLink = await stripe.accountLinks.create({
         account: accountID,
         refresh_url: 'http://localhost:3000/MarketplacePage',

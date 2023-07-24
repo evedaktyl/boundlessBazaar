@@ -9,7 +9,7 @@ const stripe = require('stripe')(stripeSecretKey);
 
 export default async function handler(req, res) {
 
-    const {userID, accountID } = req.body;
+    const {accountID, userID } = req.body;
     
     try {
         const account = await stripe.account.retrieve(accountID);

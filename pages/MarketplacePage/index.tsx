@@ -254,51 +254,10 @@ export default function Marketplace() {
                 body: JSON.stringify(dataToUpdate)
             });
 
+            const updateUserResponseData = await updateUserResponse.json();
             //open stripe onboarding in another tab
             window.open(stripeAccLink, '_blank');
         
-            window.onpopstate = async () => {
-                console.log('fetching onboarded after submission');
-                try {
-                    // Fetch data from the onboarded API to check onboarding status
-                    console.log('checking onboarding of stripeid: ' + stripeid);
-            const dataToOnboarded2 = {
-                accountID: stripe_account_id,
-                userID: sessionID,
-            };
-            const checkOnboardingResponse = await fetch('/api/onboarded', {
-                method: 'POST', 
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(dataToOnboarded2)
-            });
-
-            const checkOnboardingData = await checkOnboardingResponse.json();
-        
-            if (checkOnboardingData.success) {
-                console.log('onboarding successfully completed')
-                const response = await fetch('/api/offerAccept', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(data),
-                });
-                if (response.ok) {
-                    router.push('/MarketplacePage/OfferAccepted');
-                    return;
-                } else {
-                    const data = await response.json();
-                    console.error(data.message);
-                }
-            } else {
-                console.log('onboarding failed to pass check')
-                }  
-            } catch (error) {
-
-            }
-        };
     }
 
             //router.push(stripeOnboardingData.link);

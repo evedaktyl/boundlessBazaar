@@ -6,7 +6,7 @@ export default async function handler(req, res) {
       return res.status(405).json({ message: 'Method Not Allowed' });
     }
   
-    const {userID, stripeID} = req.body;
+    const {userID, accountID} = req.body;
   
     try {
       
@@ -15,12 +15,14 @@ export default async function handler(req, res) {
         await prisma.users.update({
             where: {id: userID},
             data: {
-                stripe_id: stripeID,
+                stripe_id: accountID
             }
         });
 
+        console.log(accountID);
+        console.log('successfully updated');
     
-    return res.status(201).json({ message: 'updated successfully' });
+    return res.status(200).json({ message: 'updated successfully' });
     } catch (error) {
       console.error(error);
       return res.status(500).json({ message: 'Internal Server Error' });
