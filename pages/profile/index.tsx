@@ -80,8 +80,6 @@ export default function Marketplace() {
             if (response.ok) {
                 const res = await response.json()
                 changeShowChat(true);
-                console.log(res[1]);
-                console.log(res[1].name);
                 (type === 'buyer')
                     ? changeChatterName('Chat with traveler: ' + res[1].name)
                     : changeChatterName('Chat with buyer: ' + res[1].name);
@@ -105,7 +103,7 @@ export default function Marketplace() {
         editChangedEmail(e.currentTarget.value);
     }
     const callProducts = async (type:string) => {
-        console.log('products called' + type);
+
         const data = {
             userID: id,
             type: type
@@ -263,7 +261,7 @@ export default function Marketplace() {
                                 </div>
                                 </div>
                                 ) : (
-                                <div key={i} className="p-4">
+                                <div key={i} className="p-2">
                                 <div className="bg-slate-300 p-2 w-fit h-fit rounded-lg"><span>{msgArr[1]}</span>
                                 </div>
                                 </div>
