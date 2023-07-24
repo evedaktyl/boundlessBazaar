@@ -1,10 +1,11 @@
 'use client';
 import Image from "next/image";
 import { useState } from "react";
-import {Row, Col } from "react-bootstrap"
+import {Row, Col, Button } from "react-bootstrap"
 import { useSession } from "next-auth/react";
 import { json } from "stream/consumers";
 import { useRouter } from "next/router";
+import Popup from 'reactjs-popup';
 
 export default function Marketplace() {
     const session:any = useSession();
@@ -18,7 +19,82 @@ export default function Marketplace() {
     const [lowerText, changeLowerText] = useState('');
     const [buyerProducts, changeBuyerProducts] = useState<any>([]);
     const [travelerProducts, changeTravelerProducts] = useState<any>([]);
-    
+    const [initialCall, changeInitialCall] = useState<boolean>(false);
+    const [messages, changeMessages] = useState<any>([]);
+    const [currChatter, changeCurrChatter] = useState<number>();
+    const [currProduct, changeCurrProduct] = useState<number>();
+    const [showChat, changeShowChat] = useState<boolean>(false);
+    const closeModal = () => changeShowChat(false);
+    const [query, changeQuery] = useState('');
+    const [chatterName, changeChatterName] = useState('');
+
+    const handleInput = (e: any) => {
+        changeQuery(e.currentTarget.value);
+    }
+
+    const handleSend = async () => {
+        const data = {
+            text: query,
+            senderID: id,
+            receiverID: currChatter,
+            productID: currProduct
+        }
+        try {
+            const response = await fetch('/api/updateChats', {
+                method: 'POST',
+                headers: {
+                'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            });
+            if (response.ok) {
+                const res = await response.json();
+                changeMessages(res);
+                changeQuery('');
+            } else {
+                const data:any = await response.json();
+                console.error(data.message);
+            }
+        } catch(error) {
+        }
+    }
+
+    const handleSubmit = async (productID: any, type: string, chatterID: any) => {
+        changeCurrChatter(chatterID);
+        changeCurrProduct(productID);
+
+        const data = {
+            userID: id,
+            productID: productID,
+            type: type,
+            chatterID: chatterID
+        }
+        try {
+            const response = await fetch('/api/retrieveChats', {
+                method: 'POST',
+                headers: {
+                'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            });
+            if (response.ok) {
+                const res = await response.json()
+                changeShowChat(true);
+                console.log(res[1]);
+                console.log(res[1].name);
+                (type === 'buyer')
+                    ? changeChatterName('Chat with traveler: ' + res[1].name)
+                    : changeChatterName('Chat with buyer: ' + res[1].name);
+                changeMessages(res[0]);
+                
+            } else {
+                const data:any = await response.json();
+                console.error(data.message);
+            }
+        } catch(error) {
+        }
+    }
+
     const changeNameHandler = (e: any) => {
         editChangedName(e.currentTarget.value);
     }
@@ -29,6 +105,7 @@ export default function Marketplace() {
         editChangedEmail(e.currentTarget.value);
     }
     const callProducts = async (type:string) => {
+        console.log('products called' + type);
         const data = {
             userID: id,
             type: type
@@ -52,8 +129,19 @@ export default function Marketplace() {
         } catch(error) {
         }
     }
-    callProducts('traveler')
-    callProducts('buyer');
+    function call1() {
+        if (!initialCall) {
+            callProducts('traveler');
+        }
+    }
+    function call2() {
+        if (!initialCall) {
+            callProducts('buyers');
+            changeInitialCall(true);
+        }
+    }
+    call1();
+    call2();
     
     const changeDetails = async (e:any, type:string) => {
         e.preventDefault();
@@ -82,13 +170,24 @@ export default function Marketplace() {
         }
     }
 
+    function smallText(text: string, limit: number) {
+        var str:string = text;
+        if(str.length > limit) str = str.substring(0, limit)+"...";
+        return str;
+    }
+
+    function smallNum(num: number) {
+        var str:string = num.toString();
+        if(str.length > 4) str = str.substring(0,4)+"...";
+        return str;
+    }
 
     return (
-        <div>
-            <h1 className='mt-2 text-blue-800 text-6xl leading-8 font-bold pb-8 text-left pl-64'>
+        <div className="mx-[10%]">
+            <h1 className='mt-2 text-blue-800 text-6xl leading-8 font-bold pb-8 text-left'>
                     Welcome back {name}
             </h1>
-            <form className='pb-3 pl-64'>
+            <form className='pb-3'>
                     <label className='mt-2 text-2xl leading-8 font-semibold sm:text-1xl pb-2 pr-8'>
                         Name: {name}
                         </label>
@@ -105,7 +204,7 @@ export default function Marketplace() {
                     </a>
                     </div>
                 </form>
-                <form className='pb-3 pl-64'>
+                <form className='pb-3'>
                     <label className='mt-2 text-2xl leading-8 font-semibold sm:text-1xl pb-2 pr-8'>
                         Username: {uname}
                         </label>
@@ -122,7 +221,7 @@ export default function Marketplace() {
                     </a>
                     </div>
                 </form>
-                <form className='pb-10 pl-64'>
+                <form className='pb-10'>
                     <label className='mt-2 text-2xl leading-8 font-semibold sm:text-1xl pb-2 pr-8'>
                         Email: {email}
                         </label>
@@ -139,13 +238,48 @@ export default function Marketplace() {
                     </a>
                     </div>
                 </form>
-                <label className='mt-2 text-2xl leading-8 font-semibold sm:text-1xl py-10 pr-8 pl-64 text-blue-800'>
+                <label className='mt-2 text-2xl leading-8 font-semibold sm:text-1xl py-10 pr-8 text-blue-800'>
                         {lowerText}
                 </label>
-                <div className='text-blue-800 text-6xl leading-8 font-bold text-left pl-64 pt-20 pb-10'>
+                <div className='text-blue-800 text-6xl leading-8 font-bold text-left pt-20 pb-10'>
                 Products Listed:-
-            </div>
-            <div className="grid grid-cols-2 mx-56">
+                </div>
+                <Popup open={showChat} closeOnDocumentClick onClose={closeModal}>
+                    <div className="w-[1200px] h-[600px] bg-rose-200 p-5 rounded-lg">
+                    <button className="bg-gray-50 rounded-full text-3xl p-1 px-3 flex ml-auto text-center"
+                        onClick={closeModal}>
+                        &times;
+                    </button>
+                    <div className="bg-gray-50 w-[1000px] h-[500px] ml-20 rounded-lg py-5 px-10">
+                        <div className="text-blue-800 text-3xl leading-8 font-bold">
+                            {chatterName}
+                        </div>
+                        <div className="h-[380px]">
+                        {messages.map((msgArr: any, i: number) => (
+                            (msgArr[0] === 0) ? (
+                                <div key={i} className="p-2">
+                                <div className="bg-green-600 p-2 w-fit h-fit flex ml-auto rounded-lg">
+                                    <h1 className="text-left">{msgArr[1]}</h1>
+                                </div>
+                                </div>
+                                ) : (
+                                <div key={i} className="p-4">
+                                <div className="bg-slate-300 p-2 w-fit h-fit rounded-lg"><span>{msgArr[1]}</span>
+                                </div>
+                                </div>
+                                )
+                            ))}
+                        </div>
+                        <div className="bg-zinc-400 rounded-2xl w-[900px] h-14 p-2">
+                            <input className="rounded-full h-10 w-[790px] p-1 px-4" value={query} onChange={handleInput} />
+                            <a className="px-4">
+                            <button className="bg-green-700 px-3 py-2 rounded-lg hover:bg-green-900" onClick={handleSend}> Send </button>
+                            </a>
+                        </div>
+                    </div>
+                    </div>
+                </Popup>
+            <div className="grid grid-cols-2">
             {buyerProducts.map((product: {
                 description: string;
                 deliver_country:string,
@@ -153,35 +287,48 @@ export default function Marketplace() {
                 quantity: number;
                 curr_offer: number;
                 title: string;
-                image_url: string; id: React.Key | null | undefined; 
+                image_url: string;
+                id: React.Key | number | null | undefined;
+                traveller_id: number | null;
             }) => 
-                <div className='mx-10 mb-10 w-[480px] h-64 bg-rose-300 rounded-lg grid grid-cols-2 grid-rows-2 gap-0'
+                <div className='mx-10 mb-10 w-[480px] h-auto bg-rose-300 rounded-lg grid grid-cols-2 grid-rows-2 gap-0'
                 key={product.id}>
                 <div className="w-40 h-40 bg-white ml-8 rounded-lg mt-5">
-                    <div className="w-[200px] h-[200px]">
-                    {/* <Image src={"/public/BB_icon"}
-                    placeholder={'blur'}
-                    blurDataURL={"/public/BB_icon"}
-                     alt="no valid img url"
-        className='pt-6' width={1000} height={1000} /> */}
-                    </div>
-                    <div>
-                        {product.collect_country} {'->'} {product.deliver_country}
-                    </div>
+                <div className="w-[200px] h-[200px]">
+                    <Image src={"/trolley.png"}
+                        placeholder={'blur'}
+                        blurDataURL={"/public/BB_icon"}
+                        alt="no valid img url"
+                        className='pt-6' width={150} height={150} />         
+                </div>
+                <div>
+                    {product.collect_country} {'->'} {product.deliver_country}
+                </div>
+                <div className="py-3">
+                {(product.traveller_id !== null)
+                ?
+                <button type="submit" onClick={() => handleSubmit(product.id, 'buyer', product.traveller_id)}
+                    className='bg-green-700 hover:bg-green-900 text-white font-bold py-2 px-2 rounded-lg'>
+                    Chat with traveler
+                </button>
+                :<div></div>
+                }
+                </div>
                 </div>
                 <div className="w-50 h-40 mr-8 rounded-lg mt-5">
                     <h1 className="pb-4 font-semibold text-2xl">{product.title}</h1>
                     <h1 className="pb-2 text-2xl">Offer Price: {product.curr_offer}</h1>
-                    <h1 className="pb-2 text-2xl    ">Quantity Offered: {product.quantity}</h1>
-                    <h1 className="pb-10 text-1xl">Description: {product.description}</h1>
+                    <h1 className="pb-2 text-2xl">Quantity Offered: {product.quantity}</h1>
+                    <h1 className="pb-2 text-2xl">Description:</h1>
+                    <h1 className="pb-10 text-1xl">{product.description}</h1>
                 </div>
                 </div>
             )}
             </div>
-            <div className='text-blue-800 text-6xl leading-8 font-bold text-left pl-64 pt-20 pb-10'>
+            <div className='text-blue-800 text-6xl leading-8 font-bold text-left pt-20 pb-10'>
                 Products to be Delivered:-
             </div>
-            <div className="grid grid-cols-2 mx-56">
+            <div className="grid grid-cols-2">
             {travelerProducts.map((product: {
                 description: string;
                 deliver_country:string,
@@ -189,27 +336,36 @@ export default function Marketplace() {
                 quantity: number;
                 curr_offer: number;
                 title: string;
-                image_url: string; id: React.Key | null | undefined; 
+                image_url: string; id: React.Key | null | undefined;
+                buyer_id: number;
             }) => 
-            <div className='mx-10 mb-10 w-[480px] h-64 bg-rose-300 rounded-lg grid grid-cols-2 grid-rows-2 gap-0'
+            <div className='mx-10 mb-10 w-[480px] h-auto bg-rose-300 rounded-lg grid grid-cols-2 grid-rows-2 gap-0'
             key={product.id}>
             <div className="w-40 h-40 bg-white ml-8 rounded-lg mt-5">
-                <div className="w-[200px] h-[200px]">
-                {/* <Image src={"/public/BB_icon"}
-                placeholder={'blur'}
-                blurDataURL={"/public/BB_icon"}
-                 alt="no valid img url"
-    className='pt-6' width={1000} height={1000} /> */}
-                </div>
-                <div>
-                    {product.collect_country} {'->'} {product.deliver_country}
-                </div>
+            <div className="w-[200px] h-[200px]">
+                <Image src={"/trolley.png"}
+                    placeholder={'blur'}
+                    blurDataURL={"/public/BB_icon"}
+                    alt="no valid img url"
+                    className='pt-6' width={150} height={150} />         
+            </div>
+            <div>
+                 {product.collect_country} {'->'} {product.deliver_country}
+            </div>
+            <div className="py-3">
+                <button type="submit"
+                    onClick={() => handleSubmit(product.id, 'traveler', product.buyer_id)}
+                    className='bg-green-700 hover:bg-green-900 text-white font-bold py-2 px-4 rounded-lg'>
+                    Chat with buyer
+                </button>
+            </div>
             </div>
             <div className="w-50 h-40 mr-8 rounded-lg mt-5">
                 <h1 className="pb-4 font-semibold text-2xl">{product.title}</h1>
-                <h1 className="pb-2 text-2xl">Offer Price: {product.curr_offer}</h1>
-                <h1 className="pb-2 text-2xl    ">Quantity Offered: {product.quantity}</h1>
-                <h1 className="pb-10 text-1xl">Description: {product.description}</h1>
+                <h1 className="pb-2 text-2xl">Offer Price: ${product.curr_offer}</h1>
+                <h1 className="pb-5 text-2xl">Quantity Offered: {product.quantity}</h1>
+                <h1 className="pb-2 text-2xl">Description:</h1>
+                <h1 className="pb-10 text-1xl">{product.description}</h1>
             </div>
             </div>
             )}
