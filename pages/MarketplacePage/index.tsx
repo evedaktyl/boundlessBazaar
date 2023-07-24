@@ -156,10 +156,11 @@ export default function Marketplace() {
             userEmail: sessionEmail,
             userName: sessionName,
         }
+
         console.log(productID);
         e.preventDefault();
 
-        const stripeid = session.data?.user?.stripe_id;
+        const stripeid = await session.data?.user?.stripe_id;
         console.log(stripeid);
         //for now still shows null :( sad
 
@@ -198,25 +199,28 @@ export default function Marketplace() {
                 console.log('onboarding failed to pass check')
             }  
         }
-
-        
-             // Fetch the Stripe onboarding API first
-             const stripeOnboardingResponse = await fetch(`/api/onboarding`, {
+        else {
+            // Fetch the Stripe onboarding API first
+            console.log('no stripe the retrieved')
+            const stripeOnboardingResponse = await fetch(`/api/onboarding`, {
                 method: 'POST',
                 headers: {
                 'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(data)
-            });
+                });
+        
+                let stripeOnboardingData = await stripeOnboardingResponse.json();
+                console.log(stripeOnboardingData);
+                const stripeAccLink = stripeOnboardingData.link;
+                const stripe_account_id = stripeOnboardingData.accountID;
+        
+                console.log(stripe_account_id);
+                //open stripe onboarding in another tab
+                window.open(stripeAccLink, '_blank');
+                
+        }
 
-            let stripeOnboardingData = await stripeOnboardingResponse.json();
-            console.log(stripeOnboardingData);
-            const stripeAccLink = stripeOnboardingData.link;
-            const stripe_account_id = stripeOnboardingData.accountID;
-
-            console.log(stripe_account_id);
-            //open stripe onboarding in another tab
-            window.open(stripeAccLink, '_blank');
         
             
 

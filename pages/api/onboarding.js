@@ -45,7 +45,8 @@ export default async function handler(req, res) {
             email: userEmail || undefined
           }
         });
-        
+        console.log(accountParams);
+      
         const account = await stripe.accounts.create(accountParams);
         const accountID = account.id;
         console.log(accountID);
@@ -58,8 +59,8 @@ export default async function handler(req, res) {
         });
       const accountLink = await stripe.accountLinks.create({
         account: accountID,
-        refresh_url: 'http://localhost:3000/MarketplacePage',
-        return_url: 'http://localhost:3000/MarketplacePage',
+        refresh_url: 'http://localhost:3001/MarketplacePage',
+        return_url: 'http://localhost:3001/MarketplacePage',
         type: 'account_onboarding'
       });
       const accountLinkUrl = accountLink.url;
