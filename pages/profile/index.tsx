@@ -8,6 +8,9 @@ import { useRouter } from "next/router";
 import Popup from 'reactjs-popup';
 
 export default function Marketplace() {
+
+    const router = useRouter();
+
     const session:any = useSession();
     const name = session.data?.user?.name;
     const uname = session.data?.user?.username;
@@ -376,6 +379,7 @@ export default function Marketplace() {
                 image_url: string;
                 id: React.Key | number | null | undefined;
                 traveller_id: number | null;
+                status: string;
             }) => 
                 <div className='mx-10 mb-10 w-[480px] h-auto bg-rose-300 rounded-lg grid grid-cols-2 grid-rows-2 gap-0'
                 key={product.id}>

@@ -44,6 +44,18 @@ export default function Marketplace() {
     const [searchedProducts, changeSearchedproducts] = useState<any>([]);
     const [searchResultComponent, searchResultComponentChanged] = useState<any>();
 
+    function smallText(text: string, limit: number) {
+        var str:string = text;
+        if(str.length > limit) str = str.substring(0, limit)+"...";
+        return str;
+    }
+
+    function smallNum(num: number) {
+        var str:string = num.toString();
+        if(str.length > 4) str = str.substring(0,4)+"...";
+        return str;
+    }
+
     const callProducts = async () => {
         try {
             const response = await fetch('/api/getProducts', {
@@ -258,7 +270,7 @@ export default function Marketplace() {
             //open stripe onboarding in another tab
             window.open(stripeAccLink, '_blank');
         
-    }
+    }}
 
             //router.push(stripeOnboardingData.link);
         
@@ -322,19 +334,6 @@ export default function Marketplace() {
             //     console.log('stripe onboarding not successful')
             //     router.push('MarketplacePage');
             // }
-        
-
-    function smallText(text: string, limit: number) {
-        var str:string = text;
-        if(str.length > limit) str = str.substring(0, limit)+"...";
-        return str;
-    }
-
-    function smallNum(num: number) {
-        var str:string = num.toString();
-        if(str.length > 4) str = str.substring(0,4)+"...";
-        return str;
-    }
 
 
     return (
