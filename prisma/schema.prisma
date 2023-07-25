@@ -22,47 +22,56 @@ model users {
 }
 
 model buyers {
-  country      String @db.VarChar(255)
-  state        String @db.VarChar(255)
-  city         String @db.VarChar(255)
-  user         users @relation(fields: [buyerId], references: [id])
-  buyerId      Int @unique
-  products     products[]
+  country  String     @db.VarChar(255)
+  state    String     @db.VarChar(255)
+  city     String     @db.VarChar(255)
+  buyerId  Int        @unique
+  user     users      @relation(fields: [buyerId], references: [id])
+  products products[]
 }
 
 model travelers {
-  country      String @db.VarChar(255)
-  state        String @db.VarChar(255)
-  city         String @db.VarChar(255)
-  user         users @relation(fields: [travellerId], references: [id])
-  travellerId  Int  @unique
-  products     products[] 
+  country     String     @db.VarChar(255)
+  state       String     @db.VarChar(255)
+  city        String     @db.VarChar(255)
+  travellerId Int        @unique
+  user        users      @relation(fields: [travellerId], references: [id])
+  products    products[]
 }
 
 model products {
-  id            Int    @id @default(autoincrement())
-  web_url       String @db.VarChar(255)
-  created_at    DateTime @default(now())
-  title         String
-  details       String
-  collect_country       String @db.VarChar(255)
-  collect_state         String @db.VarChar(255)
-  collect_city          String @db.VarChar(255) 
-  deliver_country       String @db.VarChar(255)
-  deliver_state         String @db.VarChar(255)
-  deliver_city          String @db.VarChar(255) 
-  requested_by  buyers  @relation(fields: [buyer_id], references: [buyerId])
-  buyer_id      Int
-  accepted_by  travelers? @relation(fields: [traveller_id], references: [travellerId])
-  traveller_id  Int?
-  status        String @db.VarChar(255)
-  curr_offer    Int
-  quantity      Int
-  image_url     String? @db.VarChar(255)
+  id               Int        @id @default(autoincrement())
+  web_url          String     @db.VarChar(255)
+  created_at       DateTime   @default(now())
+  title            String
+  details          String
+  collect_country  String     @db.VarChar(255)
+  collect_state    String     @db.VarChar(255)
+  deliver_country  String     @db.VarChar(255)
+  deliver_state    String     @db.VarChar(255)
+  deliver_city     String     @db.VarChar(255)
+  buyer_id         Int
+  traveller_id     Int?
+  status           String     @db.VarChar(255)
+  curr_offer       Int
+  quantity         Int
+  image_url        String?    @db.VarChar(255)
+  collect_city     String     @db.VarChar(255)
   paymentIntent_id String?
+  requested_by     buyers     @relation(fields: [buyer_id], references: [buyerId])
+  accepted_by      travelers? @relation(fields: [traveller_id], references: [travellerId])
 
   @@index([buyer_id])
   @@index([traveller_id])
+}
+
+model chat {
+  id            Int    @id @default(autoincrement())
+  text       String @db.VarChar(255)
+  product_id    Int
+  sender_id     Int
+  receiver_id   Int
+  created_at    DateTime @default(now())
 }
  
 
