@@ -18,6 +18,7 @@ model users {
   traveler     travelers?
   stripe_id     String?    @unique
   onboarding_completed Boolean?
+  stripeCustomerId String? @unique
 }
 
 model buyers {
@@ -58,9 +59,10 @@ model products {
   curr_offer    Int
   quantity      Int
   image_url     String? @db.VarChar(255)
+  paymentIntent_id String?
 
   @@index([buyer_id])
   @@index([traveller_id])
 }
-
+ 
 

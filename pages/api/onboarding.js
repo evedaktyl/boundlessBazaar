@@ -51,16 +51,16 @@ export default async function handler(req, res) {
         const accountID = account.id;
         console.log(accountID);
         console.log(userID);
-        await prisma.users.update({
-          where: {id: userID},
-          data: {
-              stripe_id: accountID
-          }
-        });
+        // await prisma.users.update({
+        //   where: {id: userID},
+        //   data: {
+        //       stripe_id: accountID
+        //   }
+        // });
       const accountLink = await stripe.accountLinks.create({
         account: accountID,
-        refresh_url: 'http://localhost:3001/MarketplacePage',
-        return_url: 'http://localhost:3001/MarketplacePage',
+        refresh_url: 'http://boundless-bazaar-git-stripenewstructure-anant1902.vercel.app/MarketplacePage',
+        return_url: 'http://boundless-bazaar-git-stripenewstructure-anant1902.vercel.app/MarketplacePage',
         type: 'account_onboarding'
       });
       const accountLinkUrl = accountLink.url;
