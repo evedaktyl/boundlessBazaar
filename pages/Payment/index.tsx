@@ -4,22 +4,25 @@ import {Elements} from '@stripe/react-stripe-js';
 import {loadStripe} from '@stripe/stripe-js';
 import { useRouter } from 'next/router';
 import { useStripe, useElements, PaymentElement } from '@stripe/react-stripe-js';
+import CheckoutForm from '../../components/checkoutForm';
+
 
 export default function Payment() {
     const router = useRouter();
 
     const stripeKey: string = (router.query.stripeKey) ? router.query.stripeKey.toString() : 'test';
     console.log(stripeKey);
-    const stripePromise = loadStripe(stripeKey);
+    const stripePromise = loadStripe('pk_test_51M9tQUIhG09DVV9L6PPCSgmk1pzsVpjmy4T7urwEbJfKuzEbmuZK7yciXD3EmYFAw0OfNt43yRyCAk5PIzYyalnh00Dsn74z7G');
 
     
-    const options = JSON.parse((router.query.options) ? router.query.options.toString() : '');
-    const clientSecret = router.query.clientSecret;
+    // const options = JSON.parse((router.query.options) ? router.query.options.toString() : '');
+    const clientSecret = (router.query.clientSecret) ? router.query.clientSecret.toString() : '';
+
+
     // const stripe = useStripe();
     // const elements = useElements();
 
     console.log(stripePromise);
-    console.log(options);
     console.log(clientSecret);
 
 
@@ -63,10 +66,13 @@ export default function Payment() {
         //     </form>
         //     </Elements>
         // </h1>
-        <form>
-            <Elements stripe={stripePromise} options={options}>
-            <button>Submit</button>
-            </Elements>
-      </form>
+        <>
+        <h1>Payment</h1>
+        {clientSecret && stripePromise && (
+          <Elements stripe={stripePromise} options={{ clientSecret, }}>
+            <CheckoutForm />
+          </Elements>
+        )}
+      </>
     )
 }
