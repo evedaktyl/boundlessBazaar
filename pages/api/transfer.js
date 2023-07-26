@@ -53,7 +53,7 @@ export default async function handler(req, res) {
         const paymentIntent = await stripe.paymentIntents.create({
             amount: centPrice,
             currency: 'sgd',
-            payment_method: paymentMethods.id,
+            payment_method: 'pm_card_visa',
             description: productTitle,
             statement_descriptor: 'boundless bazaar',
             // The destination parameter directs the transfer of funds from platform to pilot
