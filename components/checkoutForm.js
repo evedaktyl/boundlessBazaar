@@ -26,7 +26,7 @@ import {
         elements,
         confirmParams: {
           // Make sure to change this to your payment completion page
-          return_url: 'https://vercel.live/link/boundless-bazaar-git-dev-evedaktyl.vercel.app?via=deployment-domains-list-branch',
+          return_url: 'https://boundless-bazaar-c3mltnzqb-evedaktyl.vercel.app',
         },
       });
   
