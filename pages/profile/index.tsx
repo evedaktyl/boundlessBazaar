@@ -6,11 +6,13 @@ import { useSession } from "next-auth/react";
 import { json } from "stream/consumers";
 import { useRouter } from "next/router";
 import Popup from 'reactjs-popup';
+import {Elements} from '@stripe/react-stripe-js';
+import {loadStripe} from '@stripe/stripe-js';
+
 
 export default function Marketplace() {
-
+    
     const router = useRouter();
-
     const session:any = useSession();
     const name = session.data?.user?.name;
     const uname = session.data?.user?.username;
@@ -184,7 +186,8 @@ export default function Marketplace() {
     }
     const initiatePayment = async (e:any, productID:any, productOffer:any, productTitle:any) => {
         e.preventDefault();
-        console.log(session.data.user.stripeCustomerId);
+        console.log(session.data?.user);
+
         if (session.data.user.stripeCustomerId !== null) {
             console.log('customer_id exists, moving on to transfer...');
                 //
@@ -207,7 +210,21 @@ export default function Marketplace() {
                 const transferData = await transferResponse.json();
                 if (transferData.transferred) {
                     console.log('transferred');
-                    router.push('/Payment');
+
+                    const options = {
+                        // passing the client secret obtained in step 3
+                        clientSecret: transferData.client_secret,
+                        // Fully customizable with appearance API.
+                        appearance: {/*...*/},
+                      };
+
+                    router.push({
+                        pathname: '/Payment',
+                        query: {
+                            options: JSON.stringify(options),
+                            clientSecret: transferData.client_secret,
+                            stripeKey: transferData.stripeKey
+                        }});
                     return;
                 } else {
                     console.log(
@@ -379,18 +396,21 @@ export default function Marketplace() {
                 image_url: string;
                 id: React.Key | number | null | undefined;
                 traveller_id: number | null;
-                status: string;
+                status: string
             }) => 
                 <div className='mx-10 mb-10 w-[480px] h-auto bg-rose-300 rounded-lg grid grid-cols-2 grid-rows-2 gap-0'
                 key={product.id}>
-                <div className="w-40 h-40 bg-white ml-8 rounded-lg mt-5">
-                <div className="w-[200px] h-[200px]">
+                <div className="w-50 h-40 ml-8">
+                <div className="w-40 h-40 bg-white rounded-lg mt-5">
+                <div className="w-[200px] h-[170px]">
                     <Image src={"/trolley.png"}
                         placeholder={'blur'}
                         blurDataURL={"/public/BB_icon"}
                         alt="no valid img url"
                         className='pt-6' width={150} height={150} />         
                 </div>
+                </div>
+                <br />
                 <div>
                     {product.collect_country} {'->'} {product.deliver_country}
                 </div>
@@ -398,11 +418,19 @@ export default function Marketplace() {
                 {(product.traveller_id !== null)
                 ?
                 <button type="submit" onClick={() => handleSubmit(product.id, 'buyer', product.traveller_id)}
-                    className='bg-green-700 hover:bg-green-900 text-white font-bold py-2 px-2 rounded-lg'>
+                    className='bg-green-700 hover:bg-green-900 text-white font-bold py-2 px-2 rounded-lg mb-3'>
                     Chat with traveler
                 </button>
                 :<div></div>
                 }
+
+                {product.status === 'Accepted' &&
+                    <button
+                    className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded-lg'
+                    onClick={() => initiatePayment(event, product.id, product.curr_offer, product.title)}>
+                    Proceed to Payment
+                  </button>
+                  }
                 </div>
                 </div>
                 <div className="w-50 h-40 mr-8 rounded-lg mt-5">
@@ -411,14 +439,6 @@ export default function Marketplace() {
                     <h1 className="pb-2 text-2xl">Quantity Offered: {product.quantity}</h1>
                     <h1 className="pb-2 text-2xl">Description:</h1>
                     <h1 className="pb-10 text-1xl">{product.description}</h1>
-
-                    {product.status === 'Accepted' &&
-                    <button
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                    onClick={() => initiatePayment(event, product.id, product.curr_offer, product.title)}>
-                    Proceed to Payment
-                  </button>
-                  }
                 </div>
                 </div>
             )}
