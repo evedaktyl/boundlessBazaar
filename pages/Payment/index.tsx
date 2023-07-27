@@ -5,12 +5,20 @@ import {loadStripe} from '@stripe/stripe-js';
 import { useRouter } from 'next/router';
 import { useStripe, useElements, PaymentElement } from '@stripe/react-stripe-js';
 import CheckoutForm from '../../components/checkoutForm';
+import { Console } from 'console';
 
 
 export default function Payment() {
     const router = useRouter();
 
     const stripeKey: string = (router.query.stripeKey) ? router.query.stripeKey.toString() : 'test';
+    const paymentIntentID: string = (router.query.paymentIntentID) ? router.query.paymentIntentID.toString() : 'test';
+    const travellerStripeID: string = (router.query.travellerStripeID) ? router.query.travellerStripeID.toString() : 'test';
+    const porductOffer = router.query.productOffer;
+    const productTitle = router.query.productTitle;
+
+    console.log(porductOffer);
+    console.log(productTitle);
     console.log(stripeKey);
     const stripePromise = loadStripe('pk_test_51M9tQUIhG09DVV9L6PPCSgmk1pzsVpjmy4T7urwEbJfKuzEbmuZK7yciXD3EmYFAw0OfNt43yRyCAk5PIzYyalnh00Dsn74z7G');
 
@@ -67,10 +75,11 @@ export default function Payment() {
         //     </Elements>
         // </h1>
         <>
-        <h1>Payment</h1>
+        <h1 className='mx-[10%] '>Payment</h1>
         {clientSecret && stripePromise && (
           <Elements stripe={stripePromise} options={{ clientSecret, }}>
-            <CheckoutForm />
+            <CheckoutForm paymentIntentID={paymentIntentID} travellerStripeID={travellerStripeID}
+                            productOffer={porductOffer} productTitle={productTitle} />
           </Elements>
         )}
       </>

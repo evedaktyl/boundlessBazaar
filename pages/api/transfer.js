@@ -69,16 +69,40 @@ export default async function handler(req, res) {
               // destination: traveler_stripe_id,
             // },
         });
-          
+
         console.log(paymentIntent);
 
-        const paymentIntentId = paymentIntent.id;
-        await prisma.products.update({
-          where: {id: productID},
-          data: {
-              paymentIntent_id: paymentIntentId
-          }
+        console.log('GAP')
+
+        const charge = await stripe.charges.create({
+          amount: centPrice,
+          currency: 'sgd',
+          description: productTitle,
+          transfer_group: paymentIntent.id,
+          source: 'tok_visa',
         });
+
+        console.log(charge);
+
+
+        // const transfer = await stripe.transfers.create({
+        //   amount: centPrice,
+        //   currency: 'sgd',
+        //   destination: traveler_stripe_id,
+        //   transfer_group: paymentIntent.id,
+        //   description: productTitle
+        // });
+
+        // console.log(transfer);
+
+
+        // const paymentIntentId = paymentIntent.id;
+        // await prisma.products.update({
+        //   where: {id: productID},
+        //   data: {
+        //       paymentIntent_id: paymentIntentId
+        //   }
+        // });
 
         console.log('updated payment intent id');
 
@@ -108,7 +132,8 @@ export default async function handler(req, res) {
       //return_url: `http://localhost:3000/onboarded?accountID=${accountID}`
 
       res.status(200).json({transferred:true, client_secret: paymentIntent.client_secret,
-                            stripeKey: stripeSecretKey});
+                            stripeKey: stripeSecretKey, paymentIntentID: paymentIntent.id,
+                          travellerStripeID: traveler_stripe_id});
       // Redirect to Stripe to start the Express onboarding flow
     //res.redirect(accountLink.url);
     

@@ -223,7 +223,11 @@ export default function Marketplace() {
                         query: {
                             options: JSON.stringify(options),
                             clientSecret: transferData.client_secret,
-                            stripeKey: transferData.stripeKey
+                            stripeKey: transferData.stripeKey,
+                            paymentIntentID: transferData.paymentIntentID,
+                            travellerStripeID: transferData.travellerStripeID,
+                            productOffer,
+                            productTitle
                         }});
                     return;
                 } else {
@@ -387,7 +391,7 @@ export default function Marketplace() {
                 </Popup>
             <div className="grid grid-cols-2">
             {buyerProducts.map((product: {
-                description: string;
+                details: string;
                 deliver_country:string,
                 collect_country:string,
                 quantity: number;
@@ -438,7 +442,7 @@ export default function Marketplace() {
                     <h1 className="pb-2 text-2xl">Offer Price: {product.curr_offer}</h1>
                     <h1 className="pb-2 text-2xl">Quantity Offered: {product.quantity}</h1>
                     <h1 className="pb-2 text-2xl">Description:</h1>
-                    <h1 className="pb-10 text-1xl">{product.description}</h1>
+                    <h1 className="pb-10 text-1xl">{product.details}</h1>
                 </div>
                 </div>
             )}
@@ -448,7 +452,7 @@ export default function Marketplace() {
             </div>
             <div className="grid grid-cols-2">
             {travelerProducts.map((product: {
-                description: string;
+                details: string;
                 deliver_country:string,
                 collect_country:string,
                 quantity: number;
@@ -485,7 +489,7 @@ export default function Marketplace() {
                 <h1 className="pb-2 text-2xl">Offer Price: ${product.curr_offer}</h1>
                 <h1 className="pb-5 text-2xl">Quantity Offered: {product.quantity}</h1>
                 <h1 className="pb-2 text-2xl">Description:</h1>
-                <h1 className="pb-10 text-1xl">{product.description}</h1>
+                <h1 className="pb-10 text-1xl">{product.details}</h1>
             </div>
             </div>
             )}
