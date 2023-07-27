@@ -59,8 +59,8 @@ export default async function handler(req, res) {
         // });
       const accountLink = await stripe.accountLinks.create({
         account: accountID,
-        refresh_url: 'http://boundless-bazaar-git-stripenewstructure-anant1902.vercel.app/MarketplacePage',
-        return_url: 'http://boundless-bazaar-git-stripenewstructure-anant1902.vercel.app/MarketplacePage',
+        refresh_url: 'https://boundless-bazaar.vercel.app/MarketplacePage',
+        return_url: 'https://boundless-bazaar.vercel.app/MarketplacePage',
         type: 'account_onboarding'
       });
       const accountLinkUrl = accountLink.url;
