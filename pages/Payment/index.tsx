@@ -75,7 +75,10 @@ export default function Payment() {
         //     </Elements>
         // </h1>
         <>
-        <h1 className='mx-[10%] '>Payment</h1>
+        <h1 className='mt-2 text-blue-800 text-6xl leading-8 font-bold pb-10 text-left mx-[20%]'>Payment Details</h1>
+        <h1 className='mt-2  text-2xl leading-8 text-left mx-[20%]'>
+            Please enter your card details to facilitate payment:
+        </h1>
         {clientSecret && stripePromise && (
           <Elements stripe={stripePromise} options={{ clientSecret, }}>
             <CheckoutForm paymentIntentID={paymentIntentID} travellerStripeID={travellerStripeID}
