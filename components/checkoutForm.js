@@ -6,7 +6,7 @@ import {
   import {useStripe, useElements} from '@stripe/react-stripe-js';
   import { useRouter } from 'next/router';
   
-  export default function CheckoutForm({ paymentIntentID, travellerStripeID, productOffer, productTitle }) {
+  export default function CheckoutForm({ paymentIntentID, travellerStripeID, productOffer, productTitle, productID }) {
     const router = useRouter();
     const stripe = useStripe();
     const elements = useElements();
@@ -29,7 +29,8 @@ import {
         travellerStripeID,
         paymentIntentID,
         productTitle,
-        productOffer
+        productOffer,
+        productID
       };
 
       const transfer = await fetch('/api/handlePayment', {

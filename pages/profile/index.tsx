@@ -8,6 +8,7 @@ import { useRouter } from "next/router";
 import Popup from 'reactjs-popup';
 import {Elements} from '@stripe/react-stripe-js';
 import {loadStripe} from '@stripe/stripe-js';
+import Link from "next/link";
 
 
 export default function Marketplace() {
@@ -18,6 +19,8 @@ export default function Marketplace() {
     const uname = session.data?.user?.username;
     const email = session.data?.user?.email;
     const id = session.data?.user?.id;
+    const stripeID = session.data?.user?.stripe_id;
+
     const [changedName, editChangedName] = useState('');
     const [changedUname, editChangedUname] = useState('');
     const [changedEmail, editChangedEmail] = useState('');
@@ -227,7 +230,8 @@ export default function Marketplace() {
                             paymentIntentID: transferData.paymentIntentID,
                             travellerStripeID: transferData.travellerStripeID,
                             productOffer,
-                            productTitle
+                            productTitle,
+                            productID
                         }});
                     return;
                 } else {
@@ -331,7 +335,7 @@ export default function Marketplace() {
                     </a>
                     </div>
                 </form>
-                <form className='pb-10'>
+                <form className='pb-3'>
                     <label className='mt-2 text-2xl leading-8 font-semibold sm:text-1xl pb-2 pr-8'>
                         Email: {email}
                         </label>
@@ -348,6 +352,18 @@ export default function Marketplace() {
                     </a>
                     </div>
                 </form>
+                {stripeID && <form className='pb-10'>
+                    <label className='mt-2 text-2xl leading-8 font-semibold sm:text-1xl pb-3'>
+                        Stripe ID: {stripeID}
+                        </label>
+                    <div>
+                    {/* <Link href={'https://canvas.nus.edu.sg/courses/38513'}
+                    className='text-1xl text-blue-800 font-semibold underline'>
+                        Click here to view your Stripe Dashboard!
+                    </Link> */}
+                    </div>
+                </form>}
+
                 <label className='mt-2 text-2xl leading-8 font-semibold sm:text-1xl py-10 pr-8 text-blue-800'>
                         {lowerText}
                 </label>
@@ -435,6 +451,12 @@ export default function Marketplace() {
                     Proceed to Payment
                   </button>
                   }
+                {product.status === 'Paid' &&
+                    <button
+                    className='bg-blue-700 text-white font-bold py-2 px-2 rounded-lg'>
+                    Payment Completed
+                  </button>
+                }
                 </div>
                 </div>
                 <div className="w-50 h-40 mr-8 rounded-lg mt-5">

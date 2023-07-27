@@ -16,6 +16,7 @@ export default function Payment() {
     const travellerStripeID: string = (router.query.travellerStripeID) ? router.query.travellerStripeID.toString() : 'test';
     const porductOffer = router.query.productOffer;
     const productTitle = router.query.productTitle;
+    const productID = router.query.productID;
 
     console.log(porductOffer);
     console.log(productTitle);
@@ -82,7 +83,7 @@ export default function Payment() {
         {clientSecret && stripePromise && (
           <Elements stripe={stripePromise} options={{ clientSecret, }}>
             <CheckoutForm paymentIntentID={paymentIntentID} travellerStripeID={travellerStripeID}
-                            productOffer={porductOffer} productTitle={productTitle} />
+                            productOffer={porductOffer} productTitle={productTitle} productID={productID} />
           </Elements>
         )}
       </>

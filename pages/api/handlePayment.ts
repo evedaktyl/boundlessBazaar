@@ -1,8 +1,8 @@
 import { NextApiRequest, NextApiResponse} from "next";
-
+import prisma from "@/lib/prisma";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-    const { productOffer, travellerStripeID, paymentIntentID, productTitle } = req.body;
+    const { productOffer, travellerStripeID, paymentIntentID, productTitle, productID } = req.body;
     const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
     const stripe = require('stripe')(stripeSecretKey);
 
@@ -21,6 +21,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           });
         
         console.log(transfer);
+
+        await prisma.products.update({
+            where: {id: +productID},
+            data: {
+                status: 'Paid'
+            }
+          });
 
         res.status(200).json(transfer);
     } catch (error) {
